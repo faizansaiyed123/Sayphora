@@ -1,13 +1,17 @@
 "use client"
 
+import { useState } from "react"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { OctagonAlertIcon } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { FaGoogle, FaGithub } from "react-icons/fa";
 import { Input } from "@/components/ui/input"
-import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -15,27 +19,27 @@ import {
   FormMessage
 } from "@/components/ui/form"
 import { Alert, AlertTitle } from "@/components/ui/alert"
-import { useForm } from "react-hook-form"
-import { Form } from "@/components/ui/form"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { OctagonAlertIcon } from "lucide-react"
+import { authClient } from "@/lib/auth-client"
 
-// 🔐 Form validation schema
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  email: z.string().email(),
-  password: z.string().min(1, { message: "Password is required" }),
-  confirmPassword: z.string().min(1, { message: "Confirm Password is required" })
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-})
+// ✅ Zod Schema
+const formSchema = z
+  .object({
+    name: z.string().min(1, { message: "Name is required" }),
+    email: z.string().email(),
+    password: z.string().min(1, { message: "Password is required" }),
+    confirmPassword: z.string().min(1, { message: "Confirm Password is required" })
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"]
+  })
 
 export const SignUpView = () => {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
+  const [loadingProvider, setLoadingProvider] = useState<"google" | "github" | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,6 +54,7 @@ export const SignUpView = () => {
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     setError(null)
     setPending(true)
+
     authClient.signUp.email(
       {
         name: data.name,
@@ -67,6 +72,19 @@ export const SignUpView = () => {
         }
       }
     )
+  }
+
+  const handleSocialSignIn = async (provider: "google" | "github") => {
+    try {
+      setError(null)
+      setLoadingProvider(provider)
+      await authClient.signIn.social({ provider })
+      router.push("/")
+    } catch (err: any) {
+      setError(err?.message || `Failed to sign in with ${provider}`)
+    } finally {
+      setLoadingProvider(null)
+    }
   }
 
   return (
@@ -163,22 +181,28 @@ export const SignUpView = () => {
                 </div>
 
                 {/* OAuth Buttons */}
-                <div className="flex gap-3 flex-col sm:flex-row">
-                  <Button
-                    variant="outline"
-                    className="flex-1 flex items-center justify-center gap-2 text-sm"
-                  >
-                    <img src="/google.svg" alt="Google" className="h-4 w-4" />
-                    Google
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1 flex items-center justify-center gap-2 text-sm"
-                  >
-                    <img src="/github.svg" alt="GitHub" className="h-4 w-4" />
-                    GitHub
-                  </Button>
-                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+              <Button
+                onClick={() => handleSocialSignIn("google")}
+                variant="outline"
+                disabled={loadingProvider === "google"}
+                className="w-full h-9 px-3 py-1.5 text-xs flex items-center justify-center gap-2"
+              >
+                <FaGoogle className="h-3.5 w-3.5" />
+                {loadingProvider === "google" ? "Signing in..." : "Google"}
+              </Button>
+
+              <Button
+                onClick={() => handleSocialSignIn("github")}
+                variant="outline"
+                disabled={loadingProvider === "github"}
+                className="w-full h-9 px-3 py-1.5 text-xs flex items-center justify-center gap-2"
+              >
+                <FaGithub className="h-3.5 w-3.5" />
+                {loadingProvider === "github" ? "Signing in..." : "GitHub"}
+              </Button>
+            </div>
+
 
                 {/* Already have an account */}
                 <div className="text-center text-sm text-muted-foreground mt-4">
