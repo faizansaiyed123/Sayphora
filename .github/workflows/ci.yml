@@ -35,11 +35,14 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: End-to-end tests (production build)
         run: npm run test:e2e
-      - uses: actions/upload-artifact@v4
-        if: failure()
+      - name: Upload screenshots and test results
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: playwright-results
+          name: sayphora-visual-evidence
           path: test-results/
+          if-no-files-found: warn
+          retention-days: 14
 
   docker:
     runs-on: ubuntu-24.04
