@@ -108,4 +108,17 @@ test.describe('additional customer feature journeys', () => {
     await expect(page.getByRole('button', { name: 'Join for Free & Get 50 Bonus Points' })).toBeVisible();
   });
 
+  test('offline and reconnect notices reflect browser connectivity', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByText('Showing')).toBeVisible();
+
+    await page.context().setOffline(true);
+    await expect(page.getByLabel('Offline mode notification')).toBeVisible();
+    await expect(page.getByText('Offline Mode Active')).toBeVisible();
+
+    await page.context().setOffline(false);
+    await expect(page.getByLabel('Network status notification')).toBeVisible();
+    await expect(page.getByText('Connection Restored')).toBeVisible();
+  });
+
 });
