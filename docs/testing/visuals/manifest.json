@@ -1,0 +1,98 @@
+[
+  {
+    "section": "Storefront",
+    "step": 1,
+    "title": "Storefront catalogue",
+    "caption": "The storefront displays products from the API. The browser waits for a catalog item, a healthy database and a 12-product API response before this screenshot is saved.",
+    "filename": "01-storefront-catalogue.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Account creation",
+    "step": 1,
+    "title": "Registration form",
+    "caption": "A complete customer form is shown before submission. The email uses the reserved example.com domain and cannot deliver mail to a real person.",
+    "filename": "02-registration-form.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Account creation",
+    "step": 2,
+    "title": "Account created",
+    "caption": "The registration flow returns to the authenticated shopping experience after the UI confirms success.",
+    "filename": "03-registration-success.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Shopping bag and promotion",
+    "step": 1,
+    "title": "Product added to the bag",
+    "caption": "The cart drawer is open and the checkout action is available after selecting a product from the seeded catalog.",
+    "filename": "04-shopping-bag.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Shopping bag and promotion",
+    "step": 2,
+    "title": "Promotion accepted",
+    "caption": "The server accepts SAYPHORA20 and the cart displays the applied promotion before checkout continues.",
+    "filename": "05-promotion-applied.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Checkout and order tracking",
+    "step": 1,
+    "title": "Checkout review",
+    "caption": "Valid shipping details reach the review step. The supported pay-on-delivery option is present before the order is submitted.",
+    "filename": "06-checkout-review.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Checkout and order tracking",
+    "step": 2,
+    "title": "Order confirmation",
+    "caption": "The application displays a server-issued order number. The saved order, ownership, items, loyalty points, status and server-calculated total are verified through the API.",
+    "filename": "07-order-confirmation.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Checkout and order tracking",
+    "step": 3,
+    "title": "Order tracking",
+    "caption": "The tracking dialog displays the same order number returned by the API and a visible order-progress timeline.",
+    "filename": "08-order-tracking.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product reviews",
+    "step": 1,
+    "title": "Product details",
+    "caption": "The product detail view is opened for an item returned by the catalog API, and its review entry point is visible before continuing.",
+    "filename": "09-product-detail.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product reviews",
+    "step": 2,
+    "title": "Verified purchase review",
+    "caption": "The review confirmation is visible. The API independently verifies the review title and verified-purchase flag for the account that placed the order.",
+    "filename": "10-verified-product-review.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Order fulfilment",
+    "step": 1,
+    "title": "Staff order queue",
+    "caption": "After staff authentication, the fulfillment queue displays the order before a status transition is requested.",
+    "filename": "11-admin-order-before-update.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Order fulfilment",
+    "step": 2,
+    "title": "Order marked Packed",
+    "caption": "The UI confirms the change, and the API confirms the persisted Packed status and the Processing → Packed event history.",
+    "filename": "12-admin-order-updated.png",
+    "viewport": "1280 × 720"
+  }
+]
