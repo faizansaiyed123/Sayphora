@@ -334,11 +334,7 @@ test.describe('curated visual evidence', () => {
       caption: 'The review confirmation is visible. The API independently verifies the review title and verified-purchase flag for the account that placed the order.',
     });
 
-    const adminOrderResponse = await buyer.post('/api/orders', {
-      data: { items: [item], shippingAddress: ADDRESS, shippingMethod: 'Standard' },
-    });
-    expect(adminOrderResponse.status()).toBe(201);
-    const adminOrder = (await adminOrderResponse.json()).order;
+    const adminOrder = (await orderResponse.json()).order;
 
     await page.context().clearCookies();
     await page.goto('/');
