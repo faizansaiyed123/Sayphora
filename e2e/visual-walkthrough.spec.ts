@@ -7,10 +7,10 @@ const PASSWORD = 'CorrectHorse!Battery9';
 const BASE = 'http://127.0.0.1:' + (process.env.E2E_PORT || 4010);
 const ADDRESS = {
   fullName: 'Olivia Bennett',
-  street: '221B Baker Street',
+  street: '1 Canada Square',
   city: 'London',
   state: 'England',
-  zipCode: 'NW1 6XE',
+  zipCode: 'E14 5AB',
   country: 'United Kingdom',
   phone: '',
 };
@@ -339,6 +339,7 @@ test.describe('curated visual evidence', () => {
     expect(adminOrderResponse.status()).toBe(201);
     const adminOrder = (await adminOrderResponse.json()).order;
 
+    await page.context().clearCookies();
     await page.goto('/');
     await page.getByRole('button', { name: 'Sign In' }).first().click();
     await page.locator('#auth-email').fill(ADMIN.email);
