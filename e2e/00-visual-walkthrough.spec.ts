@@ -35,6 +35,12 @@ const sectionOrder = [
   'Checkout and order tracking',
   'Product reviews',
   'Order fulfilment',
+  'Wishlist',
+  'Product comparison',
+  'Virtual try-on',
+  'Ingredient diagnostics',
+  'Beauty personalisation',
+  'Boutique locator',
 ];
 let visualEntries: VisualEntry[] = [];
 let emailCounter = 0;
@@ -370,4 +376,121 @@ test.describe('curated visual evidence', () => {
       caption: 'The UI confirms the change, and the API confirms the persisted Packed status and the Processing → Packed event history.',
     });
   });
+  test('captures wishlist, comparison, virtual try-on, beauty tools and boutique selection', async ({ page }) => {
+    await page.goto('/');
+
+    const wishlistButton = page.locator('button[aria-label="Add to wishlist"]').first();
+    await wishlistButton.hover();
+    await wishlistButton.click();
+    await page.locator('button[title="View Saved Wishlist"]').click();
+    await expect(page.getByRole('heading', { name: /My Saved Wishlist/ })).toBeVisible();
+    await expect(page.getByText('Your wishlist is empty')).toHaveCount(0);
+    await capture(page, {
+      section: 'Wishlist',
+      step: 1,
+      filename: '13-saved-wishlist',
+      title: 'Saved wishlist',
+      caption: 'A real seeded catalog product has been saved, and the wishlist drawer displays the selected item before any bag action.',
+    });
+    await page.locator('button[title="Share Wishlist"]').locator('xpath=following-sibling::button').click();
+
+    const firstCompare = page.locator('button[title="Compare formula"]').first();
+    await firstCompare.locator('xpath=ancestor::div[contains(@class,"group")][1]').hover();
+    await firstCompare.click();
+    await expect(page.getByText('Formula Comparison Matrix')).toBeVisible();
+    await page.locator('div.fixed.inset-0').last().locator('button').nth(1).click();
+
+    const nextCompare = page.locator('button[title="Compare formula"]').first();
+    await nextCompare.locator('xpath=ancestor::div[contains(@class,"group")][1]').hover();
+    await nextCompare.click();
+    await expect(page.getByText('Products (2/4)', { exact: true })).toBeVisible();
+    await expect(page.getByText('Customer Rating', { exact: true }).last()).toBeVisible();
+    await expect(page.getByText('Finish & Coverage', { exact: true }).last()).toBeVisible();
+    await capture(page, {
+      section: 'Product comparison',
+      step: 1,
+      filename: '14-product-comparison',
+      title: 'Side-by-side product comparison',
+      caption: 'Two seeded catalog products appear together in the comparison matrix, with customer rating, finish, coverage and skin-type attributes.',
+    });
+    await page.locator('div.fixed.inset-0').last().locator('button').nth(1).click();
+
+    await page.getByRole('heading', { name: "Pro Filt'r Soft Matte Longwear Liquid Foundation" }).first().click();
+    await page.getByRole('button', { name: 'Virtual Try-On', exact: true }).click();
+    await expect(page.getByText('Live Virtual Mirror', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Glossy', exact: true }).click();
+    await expect(page.getByRole('button', { name: /Add Tested Shade to Bag/ })).toBeVisible();
+    await capture(page, {
+      section: 'Virtual try-on',
+      step: 1,
+      filename: '15-virtual-try-on',
+      title: 'Virtual try-on studio',
+      caption: 'The virtual mirror opens for a real foundation from the seeded catalog. The finish control is changed before the screenshot is captured.',
+    });
+    await page.getByRole('button', { name: /Add Tested Shade to Bag/ }).click();
+    await expect(page.getByText('Live Virtual Mirror', { exact: true })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Decode Actives', exact: true }).click();
+    await expect(page.getByText('Clean & Clinical Ingredient Diagnostic')).toBeVisible();
+    await expect(page.getByText('Pore Clog Index', { exact: true })).toBeVisible();
+    await expect(page.getByText('Formula pH', { exact: true })).toBeVisible();
+    await capture(page, {
+      section: 'Ingredient diagnostics',
+      step: 1,
+      filename: '16-ingredient-diagnostics',
+      title: 'Ingredient safety diagnostic',
+      caption: 'The product diagnostic displays its standard, pore-clog index, formula pH and ingredient safety information for the selected catalog product.',
+    });
+    await page.locator('div.fixed.inset-0').last().locator('button').first().click();
+    await page.getByRole('button', { name: 'Close details' }).click();
+
+    await page.locator('button[title="AI Shade Matcher & Skin Regimen Builder"]').click();
+    await expect(page.getByText('Find Your Perfect Complexion Match')).toBeVisible();
+    await page.getByRole('button', { name: 'Medium', exact: true }).click();
+    await page.getByText('Warm Undertone').click();
+    await page.getByRole('button', { name: 'Calculate My Exact Shade Match' }).click();
+    await expect(page.getByText(/% match score/)).toBeVisible();
+    await capture(page, {
+      section: 'Beauty personalisation',
+      step: 1,
+      filename: '17-shade-match',
+      title: 'Personalised shade match',
+      caption: 'The deterministic catalog-backed matcher returns an in-stock shade for the selected medium depth and warm undertone; this is not a live Gemini-provider test.',
+    });
+    await page.getByRole('button', { name: /Skincare Regimen Builder/ }).click();
+    await expect(page.getByText('Custom AI Skincare Regimen')).toBeVisible();
+    await page.getByRole('button', { name: 'Generate My Custom Regimen' }).click();
+    await expect(page.getByText('Morning (AM) Regimen')).toBeVisible();
+    await expect(page.getByText('Evening (PM) Regimen')).toBeVisible();
+    await capture(page, {
+      section: 'Beauty personalisation',
+      step: 2,
+      filename: '18-skincare-routine',
+      title: 'Morning and evening routine',
+      caption: 'The deterministic routine builder recommends real catalog products in separate AM and PM steps. Live external AI generation remains a separate integration check.',
+    });
+    await page.locator('div.fixed.inset-0').last().locator('button').first().click();
+
+    await page.locator('button[title="Google Maps Store Locator & Ateliers"]').click();
+    await expect(page.getByPlaceholder('Search city, address, zip code, or beauty boutique name...')).toBeVisible();
+    await page.getByRole('button', { name: 'Search Boutiques' }).click();
+    await expect(page.getByText('Open in Google Maps').first()).toBeVisible();
+    await capture(page, {
+      section: 'Boutique locator',
+      step: 1,
+      filename: '19-boutique-directory',
+      title: 'Boutique directory',
+      caption: 'The locator displays the seeded boutique directory using the built-in fallback path; no GPS permission is requested.',
+    });
+    await page.getByRole('button', { name: 'Set Pickup Store' }).first().click();
+    await expect(page.getByText('Selected Store').first()).toBeVisible();
+    await capture(page, {
+      section: 'Boutique locator',
+      step: 2,
+      filename: '20-pickup-store-selected',
+      title: 'Pickup location selected',
+      caption: 'The selected boutique is visibly marked in the locator after the user chooses it as the preferred pickup location.',
+    });
+  });
+
 });
