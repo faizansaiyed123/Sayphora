@@ -429,8 +429,8 @@ test.describe('curated visual evidence', () => {
     });
     await page.getByRole('button', { name: /Add Tested Shade to Bag/ }).click();
     await expect(page.getByText('Live Virtual Mirror', { exact: true })).toHaveCount(0);
-    await page.getByRole('heading', { name: "Pro Filt'r Soft Matte Longwear Liquid Foundation" }).first().click();
-    await page.getByRole('button', { name: 'Decode Actives', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Virtual Try-On', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Decode Actives', exact: true }).last().click();
     await expect(page.getByText('Clean & Clinical Ingredient Diagnostic')).toBeVisible();
     await expect(page.getByText('Pore Clog Index', { exact: true })).toBeVisible();
     await expect(page.getByText('Formula pH', { exact: true })).toBeVisible();
