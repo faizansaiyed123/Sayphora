@@ -34,16 +34,16 @@ test.describe('additional customer feature journeys', () => {
 
     const compareButtons = page.locator('button[title="Compare formula"]');
     await compareButtons.first().hover();
-    await expect(compareButtons.first()).toBeVisible();
     await compareButtons.first().click();
+    await expect(page.getByText('Formula Comparison Matrix')).toBeVisible();
 
+    // Selecting one item opens the comparison modal. Close it to select the next product card.
+    await page.locator('div.fixed.inset-0 button').nth(1).click();
     const nextCompareButton = page.locator('button[title="Compare formula"]').first();
     await nextCompareButton.hover();
     await nextCompareButton.click();
 
-    const openCompare = page.locator('button[title="Compare Formulations"]');
-    await expect(openCompare).toBeVisible();
-    await openCompare.click();
+    await expect(page.getByText('Products (2/4)')).toBeVisible();
     await expect(page.getByText('Customer Rating')).toBeVisible();
     await expect(page.getByText('Finish & Coverage')).toBeVisible();
     await expect(page.getByText('Best For Skin Types')).toBeVisible();
