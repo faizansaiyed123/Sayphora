@@ -44,9 +44,9 @@ test.describe('additional customer feature journeys', () => {
     await nextCompareButton.click();
 
     await expect(page.getByText('Products (2/4)')).toBeVisible();
-    await expect(page.getByText('Customer Rating')).toBeVisible();
-    await expect(page.getByText('Finish & Coverage')).toBeVisible();
-    await expect(page.getByText('Best For Skin Types')).toBeVisible();
+    await expect(page.getByText('Customer Rating', { exact: true }).last()).toBeVisible();
+    await expect(page.getByText('Finish & Coverage', { exact: true }).last()).toBeVisible();
+    await expect(page.getByText('Best For Skin Types', { exact: true }).last()).toBeVisible();
   });
 
   test('shade matching and skincare regimen use catalogue-backed fallback results', async ({ page }) => {
