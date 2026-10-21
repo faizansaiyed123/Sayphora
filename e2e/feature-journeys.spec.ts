@@ -33,9 +33,13 @@ test.describe('additional customer feature journeys', () => {
     await page.goto('/');
 
     const compareButtons = page.locator('button[title="Compare formula"]');
+    await compareButtons.first().hover();
     await expect(compareButtons.first()).toBeVisible();
     await compareButtons.first().click();
-    await compareButtons.first().click();
+
+    const nextCompareButton = page.locator('button[title="Compare formula"]').first();
+    await nextCompareButton.hover();
+    await nextCompareButton.click();
 
     const openCompare = page.locator('button[title="Compare Formulations"]');
     await expect(openCompare).toBeVisible();
