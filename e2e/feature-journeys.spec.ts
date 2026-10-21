@@ -87,7 +87,7 @@ test.describe('additional customer feature journeys', () => {
     await page.getByRole('button', { name: 'Glossy', exact: true }).click();
     await page.getByRole('button', { name: /Add Tested Shade to Bag/ }).click();
     await expect(page.getByText('Live Virtual Mirror', { exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /1 · \\$40\.00/ })).toBeVisible();
+    await expect(page.locator('button').filter({ hasText: '1 · $40.00' }).first()).toBeVisible();
 
     // Adding from the mirror closes the product detail view; reopen it to reach the ingredient diagnostic.
     await page.getByRole('heading', { name: "Pro Filt'r Soft Matte Longwear Liquid Foundation" }).first().click();
