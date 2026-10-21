@@ -1,14 +1,14 @@
 # Sayphora — CI Test Report
 
 **Result:** PASS  
-**Tested source commit:** [5bacef3cd704de7889f5720fb15e48aa65323eed](https://github.com/faizansaiyed123/Sayphora/commit/5bacef3cd704de7889f5720fb15e48aa65323eed)  
-**CI run:** [Run #39637423559](https://github.com/faizansaiyed123/Sayphora/actions/runs/39637423559)  
+**Tested source commit:** [9ed1fb7451e3b40d8db00ef11f4889c5fef72613](https://github.com/faizansaiyed123/Sayphora/commit/9ed1fb7451e3b40d8db00ef11f4889c5fef72613)  
+**CI run:** [Run #39639468231](https://github.com/faizansaiyed123/Sayphora/actions/runs/39639468231)  
 **Branch:** main
 
 | Check | Result |
 |---|---|
 | Clean dependency install (
-added 581 packages, and audited 582 packages in 9s
+added 581 packages, and audited 582 packages in 10s
 
 138 packages are looking for funding
   run `npm fund` for details
@@ -18,7 +18,7 @@ found 0 vulnerabilities) | PASS |
 > sayphora@2.0.0 typecheck
 > tsc --noEmit) | PASS |
 | Unit and API integration suite | PASS — 110 tests across 9 files |
-| Playwright browser suite | PASS — 12 tests |
+| Playwright browser suite | PASS — 17 tests |
 | Docker image build | PASS — the required CI job must also succeed for the overall workflow to be green |
 | Visual walkthrough | PASS — 12 curated screenshots |
 
