@@ -1,0 +1,17 @@
+node_modules
+dist
+dist-server
+coverage
+test-results
+playwright-report
+.git
+.github
+.env
+.env.*
+!.env.example
+*.zip
+*.log
+npm-debug.log*
+Dockerfile
+docker-compose*.yml
+README.md

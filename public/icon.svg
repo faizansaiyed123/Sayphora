@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917" />
+      <stop offset="100%" stop-color="#0c0a09" />
+    </linearGradient>
+  </defs>
+  <!-- Background with subtle luxury border -->
+  <rect width="512" height="512" rx="104" fill="url(#bgGrad)" />
+  <rect x="16" y="16" width="480" height="480" rx="90" fill="none" stroke="url(#goldGrad)" stroke-width="4" stroke-opacity="0.4" />
+  
+  <!-- Subtle diamond sparkle in top right -->
+  <polygon points="410,90 420,115 445,125 420,135 410,160 400,135 375,125 400,115" fill="url(#goldGrad)" />
+  
+  <!-- Stylized Serif 'S' Monogram for Sayphora -->
+  <path d="M 330 180 C 310 145 270 135 235 140 C 180 148 150 195 155 240 C 160 280 195 300 240 315 C 295 335 340 355 335 410 C 330 460 280 490 220 480 C 165 470 135 435 125 390 L 175 375 C 185 410 205 435 240 435 C 275 435 295 415 290 385 C 285 350 250 335 205 320 C 150 300 115 270 115 215 C 115 160 160 120 225 110 C 280 100 330 125 355 165 Z" fill="url(#goldGrad)" />
+  
+  <!-- Sub-label -->
+  <text x="256" y="470" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="28" font-weight="700" fill="#fef08a" letter-spacing="8">SAYPHORA</text>
+</svg>

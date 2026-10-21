@@ -1,0 +1,6 @@
+{
+  "name": "Sayphora — Luxury Beauty, Skincare & Cosmetics",
+  "description": "Premier luxury beauty, cosmetics, fragrance, and skincare e-commerce platform featuring AI shade matching, routine finder, virtual consultations, and VIP rewards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
