@@ -49,7 +49,7 @@ jobs:
 
   publish-visuals:
     if: ${{ needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: test
+    needs: [test, docker]
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -73,6 +73,7 @@ jobs:
           cp .visual-evidence/VISUAL-TEST-WALKTHROUGH.md docs/testing/VISUAL-TEST-WALKTHROUGH.md
           cp .visual-evidence/visuals/*.png docs/testing/visuals/
           cp .visual-evidence/visuals/manifest.json docs/testing/visuals/manifest.json
+          E2E_COUNT=$(node -e "const r=require('./.visual-evidence/playwright-report.json'); console.log(r.stats?.expected ?? 'see CI log')")
           cat > docs/testing/README.md <<'EOF'
           # Sayphora Test Evidence
 
@@ -97,7 +98,7 @@ jobs:
           | Clean dependency install (`npm ci`) | PASS |
           | TypeScript validation (`npm run typecheck`) | PASS |
           | Unit and API integration suite | PASS — 110 tests across 9 files |
-          | Playwright browser suite | PASS — 12 tests |
+          | Playwright browser suite | PASS — ${E2E_COUNT} tests |
           | Docker image build | PASS — the required CI job must also succeed for the overall workflow to be green |
           | Visual walkthrough | PASS — 12 curated screenshots |
 
