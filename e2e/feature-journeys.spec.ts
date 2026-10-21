@@ -77,4 +77,32 @@ test.describe('additional customer feature journeys', () => {
     await page.getByRole('button', { name: 'Set Pickup Store' }).first().click();
     await expect(page.getByText('Selected Store').first()).toBeVisible();
   });
+  test('product details provide virtual try-on and ingredient diagnostics', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('heading', { name: "Pro Filt'r Soft Matte Longwear Liquid Foundation" }).first().click();
+
+    await expect(page.getByRole('button', { name: 'Virtual Try-On', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Virtual Try-On', exact: true }).click();
+    await expect(page.getByText('Live Virtual Mirror', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Glossy', exact: true }).click();
+    await page.getByRole('button', { name: /Add Tested Shade to Bag/ }).click();
+    await expect(page.getByText('Live Virtual Mirror', { exact: true })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Decode Actives', exact: true }).click();
+    await expect(page.getByText('Clean & Clinical Ingredient Diagnostic')).toBeVisible();
+    await expect(page.getByText('Pore Clog Index', { exact: true })).toBeVisible();
+    await expect(page.getByText('Formula pH', { exact: true })).toBeVisible();
+    await expect(page.getByText('Key Bio-Actives & Safety Ratings')).toBeVisible();
+  });
+
+  test('Beauty Insider explains membership to a visitor without leaking account data', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Beauty Insider Rewards/ }).first().click();
+
+    await expect(page.getByRole('heading', { name: 'Beauty Insider Club' })).toBeVisible();
+    await expect(page.getByText('How membership works', { exact: true })).toBeVisible();
+    await expect(page.getByText('Sign in to see your balance and redeem rewards.')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Join for Free & Get 50 Bonus Points' })).toBeVisible();
+  });
+
 });
