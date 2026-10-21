@@ -41,7 +41,8 @@ let emailCounter = 0;
 
 function uniqueEmail(): string {
   emailCounter += 1;
-  return 'olivia.bennett+' + Date.now() + emailCounter + '@example.com';
+  const reservedAddresses = ['olivia.bennett@example.com', 'charlotte.hughes@example.com'];
+  return reservedAddresses[emailCounter - 1] || 'customer' + emailCounter + '@example.com';
 }
 
 function escapeHtml(value: string): string {
