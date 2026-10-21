@@ -429,7 +429,17 @@ test.describe('curated visual evidence', () => {
     });
     await page.getByRole('button', { name: /Add Tested Shade to Bag/ }).click();
     await expect(page.getByText('Live Virtual Mirror', { exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Virtual Try-On', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Shopping Bag' })).toBeVisible();
+    await expect(page.getByText("Pro Filt'r Soft Matte Longwear Liquid Foundation").last()).toBeVisible();
+    await capture(page, {
+      section: 'Virtual try-on',
+      step: 2,
+      filename: '16-vto-shade-added-to-bag',
+      title: 'Try-on shade added to the bag',
+      caption: 'After adding the selected finish, the shopping bag opens with the same seeded foundation. This confirms the mirror action reaches the cart drawer.',
+    });
+    await page.getByRole('button', { name: 'Close bag' }).click();
+    await expect(page.getByRole('button', { name: 'Virtual Try-On', exact: true }).last()).toBeVisible();
     await page.getByRole('button', { name: 'Decode Actives', exact: true }).last().click();
     await expect(page.getByText('Clean & Clinical Ingredient Diagnostic')).toBeVisible();
     await expect(page.getByText('Pore Clog Index', { exact: true })).toBeVisible();
@@ -437,7 +447,7 @@ test.describe('curated visual evidence', () => {
     await capture(page, {
       section: 'Ingredient diagnostics',
       step: 1,
-      filename: '16-ingredient-diagnostics',
+      filename: '17-ingredient-diagnostics',
       title: 'Ingredient safety diagnostic',
       caption: 'The product diagnostic displays its standard, pore-clog index, formula pH and ingredient safety information for the selected catalog product.',
     });
@@ -453,7 +463,7 @@ test.describe('curated visual evidence', () => {
     await capture(page, {
       section: 'Beauty personalisation',
       step: 1,
-      filename: '17-shade-match',
+      filename: '18-shade-match',
       title: 'Personalised shade match',
       caption: 'The deterministic catalog-backed matcher returns an in-stock shade for the selected medium depth and warm undertone; this is not a live Gemini-provider test.',
     });
@@ -465,7 +475,7 @@ test.describe('curated visual evidence', () => {
     await capture(page, {
       section: 'Beauty personalisation',
       step: 2,
-      filename: '18-skincare-routine',
+      filename: '19-skincare-routine',
       title: 'Morning and evening routine',
       caption: 'The deterministic routine builder recommends real catalog products in separate AM and PM steps. Live external AI generation remains a separate integration check.',
     });
@@ -478,7 +488,7 @@ test.describe('curated visual evidence', () => {
     await capture(page, {
       section: 'Boutique locator',
       step: 1,
-      filename: '19-boutique-directory',
+      filename: '20-boutique-directory',
       title: 'Boutique directory',
       caption: 'The locator displays the seeded boutique directory using the built-in fallback path; no GPS permission is requested.',
     });
@@ -487,7 +497,7 @@ test.describe('curated visual evidence', () => {
     await capture(page, {
       section: 'Boutique locator',
       step: 2,
-      filename: '20-pickup-store-selected',
+      filename: '21-pickup-store-selected',
       title: 'Pickup location selected',
       caption: 'The selected boutique is visibly marked in the locator after the user chooses it as the preferred pickup location.',
     });
