@@ -4,11 +4,11 @@ A full-stack storefront: **React 19 + Vite + Tailwind 4** frontend, **Express 4 
 Everything the UI shows is backed by the API and database: accounts, catalogue, cart pricing, orders, stock, reviews,
 wishlist, loyalty tiers & rewards, promo codes, AI beauty tools, admin console and analytics.
 
-## Visual showcase
+## Product walkthrough
 
-**[View all 51 screenshots and before/after journeys →](docs/testing/VISUAL-TEST-WALKTHROUGH.md)**
+**[Explore the Sayphora product walkthrough →](docs/project-walkthrough/README.md)**
 
-The gallery pairs real tested states across registration, shopping, checkout, product tools, loyalty and staff operations. It includes mobile/PWA views, links each image to its full-size capture, and states which live integrations and production behaviors remain unverified.
+Take a visual tour of the storefront, product discovery, beauty tools, shopping and checkout, customer accounts, loyalty, mobile experience, and staff operations. The walkthrough follows real application journeys and explains how the frontend, API, and PostgreSQL data work together.
 
 
 ```
