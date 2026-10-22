@@ -1183,7 +1183,7 @@ test.describe('curated visual evidence', () => {
 
     await page.getByRole('button', { name: 'VIP Promos & Codes' }).click();
     const promoCode = 'QA' + Date.now().toString().slice(-10);
-    await page.getByRole('button', { name: 'Create Promo' }).click();
+    await page.getByRole('button', { name: 'Create Promo' }).first().click();
     const promoForm = page.locator('form').filter({ has: page.getByPlaceholder('e.g. GLOW50') });
     await promoForm.getByPlaceholder('e.g. GLOW50', { exact: true }).fill(promoCode);
     await promoForm.getByPlaceholder('e.g. 20% off all Lipsticks & Glosses', { exact: true }).fill('Temporary browser-test campaign');
