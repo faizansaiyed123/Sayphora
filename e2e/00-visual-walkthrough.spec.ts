@@ -32,11 +32,15 @@ const sectionOrder = [
   'Storefront',
   'Storefront browsing',
   'Storefront communication',
+  'Storefront cart controls',
   'Product detail tools',
   'Checkout options',
+  'Customer order tracking',
   'Loyalty rewards',
   'AI concierge',
   'Offline catalog',
+  'PWA installation',
+  'Responsive navigation',
   'Admin console',
   'Product administration',
   'Order management',
@@ -86,7 +90,7 @@ function renderReport(): string {
     '',
     '## How to read this walkthrough',
     '',
-    'The images follow the user journey from product discovery to order tracking, then show verified reviews and staff fulfilment. The caption under each image explains the action and the check completed before capture. Open an image to view its original resolution.',
+    'The walkthrough includes catalogue discovery and refinements, account registration, bag/promotion/sample controls, product sizing and bundles, order placement and cancellation, saved lists, comparison, review voting, reward redemption, AI fallback journeys, boutique lookup, responsive navigation, install guidance, offline caching and staff-console workflows. Each caption describes the action and assertion completed before capture. Screenshots demonstrate browser-visible states; API assertions and integration tests separately verify persistence, validation, ownership, pricing and state transitions.',
     '',
     '## Journey coverage',
     '',
@@ -167,6 +171,10 @@ async function capture(
   const index = visualEntries.findIndex((existing) => existing.filename === filename);
   if (index >= 0) visualEntries[index] = entry;
   else visualEntries.push(entry);
+  visualEntries.sort((a, b) => {
+    const numberFor = (name: string) => Number(name.match(/^(\\d+)/)?.[1] ?? 0);
+    return numberFor(a.filename) - numberFor(b.filename);
+  });
   await saveReport();
 }
 
@@ -405,7 +413,18 @@ test.describe('curated visual evidence', () => {
       title: 'Saved wishlist',
       caption: 'A real seeded catalog product has been saved, and the wishlist drawer displays the selected item before any bag action.',
     });
-    await page.locator('button[title="Share Wishlist"]').locator('xpath=following-sibling::button').click();
+    await page.locator('button[title="Share Wishlist"]').click();
+    await expect(page.getByText('Wishlist Link Copied')).toBeVisible();
+    await capture(page, {
+      section: 'Wishlist',
+      step: 2,
+      filename: '40-wishlist-share-link',
+      title: 'Shareable wishlist link',
+      caption: 'The share action copies the storefront link when clipboard access is available and confirms the action in the wishlist UI.',
+    });
+    await page.getByRole('button', { name: 'Move to Bag', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Shopping Bag', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Close bag' }).click();
 
     const firstCompare = page.locator('button[title="Compare formula"]').first();
     await firstCompare.locator('xpath=ancestor::div[contains(@class,"group")][1]').hover();
