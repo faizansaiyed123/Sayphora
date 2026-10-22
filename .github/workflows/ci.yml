@@ -74,6 +74,7 @@ jobs:
           cp .visual-evidence/visuals/*.png docs/testing/visuals/
           cp .visual-evidence/visuals/manifest.json docs/testing/visuals/manifest.json
           E2E_COUNT=$(node -e "const r=require('./.visual-evidence/playwright-report.json'); console.log(r.stats?.expected ?? 'see CI log')")
+          SCREENSHOT_COUNT=$(find .visual-evidence/visuals -maxdepth 1 -name '*.png' -type f | wc -l | tr -d ' ')
           cat > docs/testing/README.md <<'EOF'
           # Sayphora Test Evidence
 
@@ -100,7 +101,7 @@ jobs:
           | Unit and API integration suite | PASS — 110 tests across 9 files |
           | Playwright browser suite | PASS — ${E2E_COUNT} tests |
           | Docker image build | PASS — the required CI job must also succeed for the overall workflow to be green |
-          | Visual walkthrough | PASS — 12 curated screenshots |
+          | Visual walkthrough | PASS — ${SCREENSHOT_COUNT} curated screenshots |
 
           The tests run in CI using a disposable PostgreSQL 16 service and Chromium. The visual journeys use the application's seeded catalog, prices, stock and promotions plus synthetic example.com customer accounts. No production customer accounts, production database, live payment, or live email delivery are used.
 
