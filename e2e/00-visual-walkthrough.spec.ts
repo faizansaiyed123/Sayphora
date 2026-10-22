@@ -887,4 +887,66 @@ test.describe('curated visual evidence', () => {
     });
   });
 
+
+  test('exercises cart quantity, trial samples, promotion removal and the empty state', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('heading', { name: "Pro Filt'r Soft Matte Longwear Liquid Foundation" }).first().click();
+    await page.getByRole('button', { name: 'Increase quantity' }).click();
+    const detailAdd = page.getByRole('button', { name: /Add to Bag.*80/ });
+    await expect(detailAdd).toBeVisible();
+    await detailAdd.click();
+
+    const cart = page.getByRole('heading', { name: 'Shopping Bag', exact: true })
+      .locator('xpath=ancestor::div[contains(@class,"fixed")][1]');
+    await expect(cart.getByText('Choose 2 Complimentary Samples')).toBeVisible();
+    const sampleButtons = cart.locator('button.p-2.rounded-lg.border.text-left');
+    await expect.poll(() => sampleButtons.count()).toBeGreaterThanOrEqual(2);
+    await sampleButtons.nth(0).click();
+    await sampleButtons.nth(1).click();
+    await expect(cart.getByText('2/2 Selected', { exact: true })).toBeVisible();
+
+    await cart.getByPlaceholder('Promo or reward code').fill('SAYPHORA20');
+    await cart.getByRole('button', { name: 'Apply', exact: true }).click();
+    await expect(cart.getByText('SAYPHORA20', { exact: true })).toBeVisible();
+    await capture(page, {
+      section: 'Storefront cart controls',
+      step: 1,
+      filename: '41-cart-samples-promo',
+      title: 'Cart quantity, samples and promotion',
+      caption: 'The bag contains two foundation units, two complimentary samples are selected, and the seeded SAYPHORA20 promotion is applied.',
+    });
+
+    await cart.getByRole('button', { name: 'Remove', exact: true }).click();
+    await expect(cart.getByPlaceholder('Promo or reward code')).toBeVisible();
+    await cart.locator('button[title="Remove item"]').click();
+    await expect(page.getByText('Your bag is empty')).toBeVisible();
+    await capture(page, {
+      section: 'Storefront cart controls',
+      step: 2,
+      filename: '42-cart-empty-state',
+      title: 'Empty bag after removing the item',
+      caption: 'Removing the only cart line leaves the bag in its explicit empty state after the active promotion is removed.',
+    });
+  });
+
+  test('selects product size and quantity and opens the suggested application routine', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('heading', { name: 'The Water Cream Pore-Refining Hydrating Moisturizer' }).first().click();
+    await page.getByRole('button', { name: '75 mL / 2.5 fl oz Value Size', exact: true }).click();
+    await page.getByRole('button', { name: 'Increase quantity' }).click();
+    const addButton = page.getByRole('button', { name: /Add to Bag.*144/ });
+    await expect(addButton).toBeVisible();
+    await page.getByRole('button', { name: 'Suggested Ritual & Application', exact: true }).click();
+    await expect(page.getByText('Master Artist Ritual Steps:')).toBeVisible();
+    await capture(page, {
+      section: 'Product detail tools',
+      step: 3,
+      filename: '43-product-size-and-ritual',
+      title: 'Product size, quantity and application routine',
+      caption: 'The 75 mL option and quantity two are selected, the add-to-bag total reflects $144, and the product-specific application-routine tab is opened.',
+    });
+    await addButton.click();
+    await expect(page.getByRole('heading', { name: 'Shopping Bag', exact: true })).toBeVisible();
+  });
+
 });
