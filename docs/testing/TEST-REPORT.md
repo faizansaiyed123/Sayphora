@@ -1,23 +1,33 @@
-# Sayphora — Internal CI Coverage Notes
+# Sayphora — CI Test Report
 
-This document is for engineering and maintenance. For the visitor-facing project presentation, use the [Sayphora Product Walkthrough](../project-walkthrough/README.md).
+**Result:** PASS  
+**Tested source commit:** [0d389c912126d14407b3dce836b4c6ffed59eb90](https://github.com/faizansaiyed123/Sayphora/commit/0d389c912126d14407b3dce836b4c6ffed59eb90)  
+**CI run:** [Run #39775132447](https://github.com/faizansaiyed123/Sayphora/actions/runs/39775132447)  
+**Branch:** main
 
-**Current status:** [View the latest CI workflow run](https://github.com/faizansaiyed123/Sayphora/actions/workflows/ci.yml). This document describes what CI checks; it is not a live status badge or a release certificate.
-
-## Automated checks
-
-| Area | What the workflow checks |
+| Check | Result |
 |---|---|
-| Static validation | Clean dependency installation and TypeScript type checking |
-| Unit and API integration | Backend rules and endpoints against disposable PostgreSQL |
-| Browser journeys | Playwright flows against the production build |
-| Container build | Docker image build without publishing an image |
-| Browser evidence | Run-specific Playwright reports and images uploaded as the `sayphora-ci-evidence` artifact for 14 days |
+| Clean dependency install (
+added 581 packages, and audited 582 packages in 9s
 
-The codebase's automated coverage includes account/session rules, validation and access controls, catalogue discovery, cart and promotion behavior, checkout pricing, order state, reviews, wishlist, loyalty, admin actions, migrations and selected security rules.
+138 packages are looking for funding
+  run `npm fund` for details
 
-## Data and environment limits
+found 0 vulnerabilities) | PASS |
+| TypeScript validation (
+> sayphora@2.0.0 typecheck
+> tsc --noEmit) | PASS |
+| Unit and API integration suite | PASS — 110 tests across 9 files |
+| Playwright browser suite | PASS — 35 tests |
+| Docker image build | PASS — the required CI job must also succeed for the overall workflow to be green |
+| Visual walkthrough | PASS — 51 curated screenshots |
 
-CI uses a disposable PostgreSQL database, seeded catalogue records and synthetic test accounts. It is not a live production-domain acceptance run and it does not use customer data.
+The tests run in CI using a disposable PostgreSQL 16 service and Chromium. The visual journeys use the application's seeded catalog, prices, stock and promotions plus synthetic example.com customer accounts. No production customer accounts, production database, live payment, or live email delivery are used.
 
-A green CI run does not by itself prove live Gemini responses, live Maps grounding/GPS behavior, SMTP delivery, card payment settlement, carrier webhooks, physical-device installation, production-domain sessions, or backup/recovery procedures. Those capabilities require their own configuration and environment-specific checks.
+## Coverage
+
+The suite checks catalogue rendering, registration, authentication and validation errors, cart persistence, stock rules, promotions, checkout, server-calculated order totals, order tracking, verified-purchase reviews, staff authorization, order status changes, API routing, migrations and selected security behaviors.
+
+## Scope limits
+
+This passing run does not by itself verify every production domain, every device/browser combination, live external AI providers, live email delivery, payment-provider settlement, real shipping carrier integrations, or the deployed production environment. Those need separate credentials and environment-specific checks.
