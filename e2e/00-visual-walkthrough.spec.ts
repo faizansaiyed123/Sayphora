@@ -1168,9 +1168,18 @@ test.describe('curated visual evidence', () => {
       caption: 'The stock editor persists three units; the low-stock filter still finds the item after the table reloads from server data.',
     });
 
+    const adminCatalog = await (await page.request.get('/api/admin/products')).json();
+    const createdProduct = adminCatalog.products.find((product: { name: string; id: string }) => product.name === productName);
+    expect(createdProduct).toBeDefined();
+
     await productRow.locator('button[title="Archive item"]').click();
     await expect(page.getByText('Product Archived')).toBeVisible();
-    await expect(productRow).toHaveCount(0);
+    await expect(productRow).toBeVisible();
+
+    const archivedProduct = await page.request.get('/api/products/' + createdProduct.id);
+    expect(archivedProduct.status()).toBe(404);
+    const publicCatalog = await (await page.request.get('/api/products')).json();
+    expect(publicCatalog.products.some((product: { id: string }) => product.id === createdProduct.id)).toBe(false);
 
     await page.getByRole('button', { name: 'VIP Promos & Codes' }).click();
     const promoCode = 'QA' + Date.now().toString().slice(-10);
