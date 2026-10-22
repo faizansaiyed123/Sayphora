@@ -134,9 +134,30 @@ function renderReport(): string {
   }
 
   output.push(
+    '## Feature coverage inventory',
+    '',
+    '- **Storefront and discovery:** catalog rendering, product search/typeahead, category and skin-type selection, clean/sale/price refinements, sorting, grid/editorial views, currency display preference, newsletter confirmation and mobile navigation.',
+    '- **Product experiences:** details, shade and size choices, quantity changes, product image gallery/zoom/lightbox, formulation comparison, curated bundles, virtual try-on controls, ingredient diagnostics and application instructions.',
+    '- **Bag and ordering:** quantity changes, item removal/empty state, complimentary sample selection, promo apply/removal, persistent bag and sign-in gate, shipping validation/speed choices, gift wrap/card message, order creation and calculated totals, points award, tracking lookup, invalid-order rejection and eligible cancellation.',
+    '- **Accounts and community:** registration/sign-in, credential and validation errors, account isolation, profile/beauty-profile and saved-address API checks, wishlist add/share/remove/move-to-bag, review submission/verified-purchase state, rating and buyer filters, helpful voting, review ownership/moderation, and customer-versus-staff permissions.',
+    '- **Retention/personalisation:** Beauty Insider guest/member states, actual reward redemption with point-balance verification, shade matching, AM/PM routine builder, catalogue-backed concierge recommendation and boutique search/pickup selection.',
+    '- **Operations/resilience:** protected staff console tabs, product inventory filters/stock controls/product-create form, order search/status/tracking controls, reviews moderation, promo management/form, analytics/system diagnostics, PWA manifest/service-worker registration, cached catalogue while offline and network status transitions.',
+    '- **API/unit layer:** the CI unit/API suite runs against disposable PostgreSQL and covers authentication/session and role boundaries, catalog/sample/promo/newsletter endpoints, account/address/wishlist isolation, stock/pricing/order rules, review lifecycle/votes, loyalty redemption, AI fallback and migration/security invariants.',
+    '',
+    '## Coverage boundaries — not represented as passed',
+    '',
+    '- Tests run the production build locally against disposable PostgreSQL and synthetic test accounts/addresses. This is not a deployed-domain acceptance test.',
+    '- Gemini-powered UI checks validate the deterministic fallback available without a live credential. Real Gemini requests, quotas, provider failures and response quality with a live key remain unverified.',
+    '- Boutique tests use the seeded directory/fallback. Real Google Maps grounding, live place/review data and real browser GPS permission behavior remain unverified.',
+    '- Newsletter and password-reset contracts are exercised, but actual external SMTP delivery/inbox receipt is not verified.',
+    '- Checkout supports **pay on delivery**; no live card gateway or settlement flow is available to test. Refunds for already-paid orders require an operational payment-system action.',
+    '- Tracking screens and staff-assigned tracking details are checked; live carrier APIs, shipment webhooks and carrier-confirmed delivery events are not verified.',
+    '- Service-worker/offline behavior and a simulated iOS install-help screen are tested. Actual iOS/Android installation on physical devices and push notifications are not verified.',
+    '- CI builds the Docker image but does not verify a complete Docker Compose deployment, production TLS/Secure-cookie behavior, production-domain sessions or backup/recovery procedures.',
+    '',
     '---',
     '',
-    '**Verification note:** The screenshot shows the browser UI at a successful checkpoint. Backend assertions separately verify account ownership, the stored order, server-calculated totals, verified-purchase reviews and persisted fulfilment status. A screenshot alone is not used as proof of those server-side behaviors.',
+    '**Verification note:** Screenshots are captured only after the corresponding browser assertion succeeds. Backend assertions separately verify persisted orders, server-calculated totals, loyalty point changes, review ownership/verification and fulfilment state where exercised. Features requiring external services, devices or credentials are listed above instead of being marked passed.',
     '',
   );
   return output.join('\n');
@@ -172,7 +193,7 @@ async function capture(
   if (index >= 0) visualEntries[index] = entry;
   else visualEntries.push(entry);
   visualEntries.sort((a, b) => {
-    const numberFor = (name: string) => Number(name.match(/^(\\d+)/)?.[1] ?? 0);
+    const numberFor = (name: string) => Number(name.match(/^(\d+)/)?.[1] ?? 0);
     return numberFor(a.filename) - numberFor(b.filename);
   });
   await saveReport();
