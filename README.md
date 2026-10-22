@@ -61,6 +61,10 @@ several replicas can start at once). `npm run db:status` lists applied/pending. 
 CI/CD: `.github/workflows/ci.yml` runs typecheck, unit + API tests on a Postgres service, Playwright E2E on the
 production build, and a Docker image build.
 
+## Visual showcase
+
+**[Open the Sayphora visual showcase](docs/testing/VISUAL-TEST-WALKTHROUGH.md)** — 51 inline screenshots arranged into before/after customer journeys, product feature comparisons, mobile/PWA views and staff-console workflows. Each image opens full size, and the page documents which external integrations and production behaviors have not been verified.
+
 ## Testing
 
 ```bash
