@@ -2,7 +2,7 @@
 
 > Curated evidence from verified browser states. A screenshot is added only after its UI assertion succeeds; failure screenshots and traces are not embedded in this walkthrough.
 
-**Source commit:** 61d0e2076717f558f85000ba1b20183f734f58c4  
+**Source commit:** 228cf733ac3ee653b61d48b1bc8f640c7cd88877  
 **Browser:** Chromium controlled by Playwright  
 **Viewport:** Desktop Chrome configuration  
 **Data:** Real catalog, stock, price and promotion records from the application seed. The checkout flow uses a generated example.com account and a local, non-shipping order; no real customer account, live email delivery or payment is used.
@@ -14,6 +14,19 @@ The images follow the user journey from product discovery to order tracking, the
 ## Journey coverage
 
 - **Storefront:** 1 screenshot(s)
+- **Storefront browsing:** 1 screenshot(s)
+- **Storefront communication:** 1 screenshot(s)
+- **Product detail tools:** 2 screenshot(s)
+- **Checkout options:** 2 screenshot(s)
+- **Loyalty rewards:** 2 screenshot(s)
+- **AI concierge:** 1 screenshot(s)
+- **Offline catalog:** 1 screenshot(s)
+- **Admin console:** 1 screenshot(s)
+- **Product administration:** 2 screenshot(s)
+- **Order management:** 1 screenshot(s)
+- **Review moderation:** 1 screenshot(s)
+- **Promotion management:** 2 screenshot(s)
+- **AI, maps and PWA diagnostics:** 1 screenshot(s)
 - **Account creation:** 2 screenshot(s)
 - **Shopping bag and promotion:** 2 screenshot(s)
 - **Checkout and order tracking:** 3 screenshot(s)
@@ -35,6 +48,239 @@ The images follow the user journey from product discovery to order tracking, the
 <h3>01. Storefront catalogue</h3>
 <a href="visuals/01-storefront-catalogue.png"><img src="visuals/01-storefront-catalogue.png" alt="Storefront catalogue" width="100%"/></a>
 <p>The storefront displays products from the API. The browser waits for a catalog item, a healthy database and a 12-product API response before this screenshot is saved.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Storefront browsing
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Catalogue filtering, sorting and editorial view</h3>
+<a href="visuals/22-storefront-refinements.png"><img src="visuals/22-storefront-refinements.png" alt="Catalogue filtering, sorting and editorial view" width="100%"/></a>
+<p>The browser search finds the catalog product, then category, price order, skin-type and under-$50 refinements plus the editorial layout are changed and checked.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Storefront communication
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Currency preference and newsletter confirmation</h3>
+<a href="visuals/23-newsletter-currency.png"><img src="visuals/23-newsletter-currency.png" alt="Currency preference and newsletter confirmation" width="100%"/></a>
+<p>The display currency changes to EUR and the newsletter form confirms a subscription using a synthetic example.com address.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Product detail tools
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Product image lightbox</h3>
+<a href="visuals/24-product-gallery-lightbox.png"><img src="visuals/24-product-gallery-lightbox.png" alt="Product image lightbox" width="100%"/></a>
+<p>The product image opens in the full-screen inspection lightbox and exposes its dedicated close control.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>02. Curated product bundle</h3>
+<a href="visuals/25-product-bundle-builder.png"><img src="visuals/25-product-bundle-builder.png" alt="Curated product bundle" width="100%"/></a>
+<p>The frequently-paired product builder shows the selected companions and its 15% bundle saving before the bundle is added.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## Checkout options
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Express delivery and gift options</h3>
+<a href="visuals/26-checkout-gift-options.png"><img src="visuals/26-checkout-gift-options.png" alt="Express delivery and gift options" width="100%"/></a>
+<p>The shipping step selects express delivery, enables address saving, and configures a gift box and message before reviewing the order.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>02. Checkout review with gift packaging</h3>
+<a href="visuals/27-checkout-gift-review.png"><img src="visuals/27-checkout-gift-review.png" alt="Checkout review with gift packaging" width="100%"/></a>
+<p>The review step displays pay-on-delivery, the selected gift presentation and the current server-pricing summary before order placement.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## Loyalty rewards
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Member rewards bazaar</h3>
+<a href="visuals/28-loyalty-bazaar.png"><img src="visuals/28-loyalty-bazaar.png" alt="Member rewards bazaar" width="100%"/></a>
+<p>An authenticated member sees the balance and a redeemable reward after an order has earned enough points.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>02. Reward code issued</h3>
+<a href="visuals/29-loyalty-redemption.png"><img src="visuals/29-loyalty-redemption.png" alt="Reward code issued" width="100%"/></a>
+<p>Redeeming the reward produces a customer-visible single-use code and updates the member’s available points.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## AI concierge
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Concierge product recommendation</h3>
+<a href="visuals/30-ai-concierge.png"><img src="visuals/30-ai-concierge.png" alt="Concierge product recommendation" width="100%"/></a>
+<p>A visitor asks the concierge for hydration help and receives a recommendation tied to a product in the seeded catalogue. CI uses the configured fallback when no live Gemini credential is supplied.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Offline catalog
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Cached product catalogue while offline</h3>
+<a href="visuals/31-pwa-offline-catalog.png"><img src="visuals/31-pwa-offline-catalog.png" alt="Cached product catalogue while offline" width="100%"/></a>
+<p>The production web app exposes a standalone manifest and registered service worker; after the public catalogue is cached, the browser retrieves its twelve products while network access is disabled.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Admin console
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Staff executive overview</h3>
+<a href="visuals/32-admin-overview.png"><img src="visuals/32-admin-overview.png" alt="Staff executive overview" width="100%"/></a>
+<p>The seeded administrator enters the protected operations console and sees its analytics overview.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Product administration
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Product inventory and stock controls</h3>
+<a href="visuals/33-admin-product-catalog.png"><img src="visuals/33-admin-product-catalog.png" alt="Product inventory and stock controls" width="100%"/></a>
+<p>The product tab exposes catalog search, category and stock filters, inventory editing, ratings and archive actions.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>02. New product form</h3>
+<a href="visuals/34-admin-product-create-form.png"><img src="visuals/34-admin-product-create-form.png" alt="New product form" width="100%"/></a>
+<p>The product-creation form exposes the fields used to publish a catalog item; this visual check does not submit test merchandise.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## Order management
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Order queue and fulfilment controls</h3>
+<a href="visuals/35-admin-order-management.png"><img src="visuals/35-admin-order-management.png" alt="Order queue and fulfilment controls" width="100%"/></a>
+<p>The staff orders tab exposes order search, status filtering, tracking-code entry and guarded fulfillment transitions.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Review moderation
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Customer review moderation</h3>
+<a href="visuals/36-admin-review-moderation.png"><img src="visuals/36-admin-review-moderation.png" alt="Customer review moderation" width="100%"/></a>
+<p>The protected review console lists customer feedback, verified-buyer markers and moderation actions.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Promotion management
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Promotion code administration</h3>
+<a href="visuals/37-admin-promotion-management.png"><img src="visuals/37-admin-promotion-management.png" alt="Promotion code administration" width="100%"/></a>
+<p>The promotion tab displays active campaigns and redemption counts with controls to create, activate, deactivate and remove codes.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>02. New promotion form</h3>
+<a href="visuals/38-admin-promo-create-form.png"><img src="visuals/38-admin-promo-create-form.png" alt="New promotion form" width="100%"/></a>
+<p>The promotion form exposes code, discount type, value and description fields. No promotion is created in this visual-only check.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## AI, maps and PWA diagnostics
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. AI, Maps and PWA diagnostics</h3>
+<a href="visuals/39-admin-ai-maps-pwa.png"><img src="visuals/39-admin-ai-maps-pwa.png" alt="AI, Maps and PWA diagnostics" width="100%"/></a>
+<p>The admin diagnostics page shows AI usage counters, the boutique directory, Google Maps grounding area and the service-worker cache controls.</p>
 <p><em>Viewport: 1280 × 720</em></p>
 </td>
 <td width="50%" valign="top"></td>

@@ -166,5 +166,149 @@
     "caption": "The selected boutique is visibly marked in the locator after the user chooses it as the preferred pickup location.",
     "filename": "21-pickup-store-selected.png",
     "viewport": "1280 × 720"
+  },
+  {
+    "section": "Storefront browsing",
+    "step": 1,
+    "title": "Catalogue filtering, sorting and editorial view",
+    "caption": "The browser search finds the catalog product, then category, price order, skin-type and under-$50 refinements plus the editorial layout are changed and checked.",
+    "filename": "22-storefront-refinements.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Storefront communication",
+    "step": 1,
+    "title": "Currency preference and newsletter confirmation",
+    "caption": "The display currency changes to EUR and the newsletter form confirms a subscription using a synthetic example.com address.",
+    "filename": "23-newsletter-currency.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product detail tools",
+    "step": 1,
+    "title": "Product image lightbox",
+    "caption": "The product image opens in the full-screen inspection lightbox and exposes its dedicated close control.",
+    "filename": "24-product-gallery-lightbox.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product detail tools",
+    "step": 2,
+    "title": "Curated product bundle",
+    "caption": "The frequently-paired product builder shows the selected companions and its 15% bundle saving before the bundle is added.",
+    "filename": "25-product-bundle-builder.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Checkout options",
+    "step": 1,
+    "title": "Express delivery and gift options",
+    "caption": "The shipping step selects express delivery, enables address saving, and configures a gift box and message before reviewing the order.",
+    "filename": "26-checkout-gift-options.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Checkout options",
+    "step": 2,
+    "title": "Checkout review with gift packaging",
+    "caption": "The review step displays pay-on-delivery, the selected gift presentation and the current server-pricing summary before order placement.",
+    "filename": "27-checkout-gift-review.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Loyalty rewards",
+    "step": 1,
+    "title": "Member rewards bazaar",
+    "caption": "An authenticated member sees the balance and a redeemable reward after an order has earned enough points.",
+    "filename": "28-loyalty-bazaar.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Loyalty rewards",
+    "step": 2,
+    "title": "Reward code issued",
+    "caption": "Redeeming the reward produces a customer-visible single-use code and updates the member’s available points.",
+    "filename": "29-loyalty-redemption.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "AI concierge",
+    "step": 1,
+    "title": "Concierge product recommendation",
+    "caption": "A visitor asks the concierge for hydration help and receives a recommendation tied to a product in the seeded catalogue. CI uses the configured fallback when no live Gemini credential is supplied.",
+    "filename": "30-ai-concierge.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Offline catalog",
+    "step": 1,
+    "title": "Cached product catalogue while offline",
+    "caption": "The production web app exposes a standalone manifest and registered service worker; after the public catalogue is cached, the browser retrieves its twelve products while network access is disabled.",
+    "filename": "31-pwa-offline-catalog.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Admin console",
+    "step": 1,
+    "title": "Staff executive overview",
+    "caption": "The seeded administrator enters the protected operations console and sees its analytics overview.",
+    "filename": "32-admin-overview.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product administration",
+    "step": 1,
+    "title": "Product inventory and stock controls",
+    "caption": "The product tab exposes catalog search, category and stock filters, inventory editing, ratings and archive actions.",
+    "filename": "33-admin-product-catalog.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product administration",
+    "step": 2,
+    "title": "New product form",
+    "caption": "The product-creation form exposes the fields used to publish a catalog item; this visual check does not submit test merchandise.",
+    "filename": "34-admin-product-create-form.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Order management",
+    "step": 1,
+    "title": "Order queue and fulfilment controls",
+    "caption": "The staff orders tab exposes order search, status filtering, tracking-code entry and guarded fulfillment transitions.",
+    "filename": "35-admin-order-management.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Review moderation",
+    "step": 1,
+    "title": "Customer review moderation",
+    "caption": "The protected review console lists customer feedback, verified-buyer markers and moderation actions.",
+    "filename": "36-admin-review-moderation.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Promotion management",
+    "step": 1,
+    "title": "Promotion code administration",
+    "caption": "The promotion tab displays active campaigns and redemption counts with controls to create, activate, deactivate and remove codes.",
+    "filename": "37-admin-promotion-management.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Promotion management",
+    "step": 2,
+    "title": "New promotion form",
+    "caption": "The promotion form exposes code, discount type, value and description fields. No promotion is created in this visual-only check.",
+    "filename": "38-admin-promo-create-form.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "AI, maps and PWA diagnostics",
+    "step": 1,
+    "title": "AI, Maps and PWA diagnostics",
+    "caption": "The admin diagnostics page shows AI usage counters, the boutique directory, Google Maps grounding area and the service-worker cache controls.",
+    "filename": "39-admin-ai-maps-pwa.png",
+    "viewport": "1280 × 720"
   }
 ]
