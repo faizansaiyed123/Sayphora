@@ -94,5 +94,77 @@
     "caption": "The UI confirms the change, and the API confirms the persisted Packed status and the Processing → Packed event history.",
     "filename": "12-admin-order-updated.png",
     "viewport": "1280 × 720"
+  },
+  {
+    "section": "Wishlist",
+    "step": 1,
+    "title": "Saved wishlist",
+    "caption": "A real seeded catalog product has been saved, and the wishlist drawer displays the selected item before any bag action.",
+    "filename": "13-saved-wishlist.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product comparison",
+    "step": 1,
+    "title": "Side-by-side product comparison",
+    "caption": "Two seeded catalog products appear together in the comparison matrix, with customer rating, finish, coverage and skin-type attributes.",
+    "filename": "14-product-comparison.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Virtual try-on",
+    "step": 1,
+    "title": "Virtual try-on studio",
+    "caption": "The virtual mirror opens for a real foundation from the seeded catalog. The finish control is changed before the screenshot is captured.",
+    "filename": "15-virtual-try-on.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Virtual try-on",
+    "step": 2,
+    "title": "Try-on shade added to the bag",
+    "caption": "After adding the selected finish, the shopping bag opens with the same seeded foundation. This confirms the mirror action reaches the cart drawer.",
+    "filename": "16-vto-shade-added-to-bag.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Ingredient diagnostics",
+    "step": 1,
+    "title": "Ingredient safety diagnostic",
+    "caption": "The product diagnostic displays its standard, pore-clog index, formula pH and ingredient safety information for the selected catalog product.",
+    "filename": "17-ingredient-diagnostics.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Beauty personalisation",
+    "step": 1,
+    "title": "Personalised shade match",
+    "caption": "The deterministic catalog-backed matcher returns an in-stock shade for the selected medium depth and warm undertone; this is not a live Gemini-provider test.",
+    "filename": "18-shade-match.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Beauty personalisation",
+    "step": 2,
+    "title": "Morning and evening routine",
+    "caption": "The deterministic routine builder recommends real catalog products in separate AM and PM steps. Live external AI generation remains a separate integration check.",
+    "filename": "19-skincare-routine.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Boutique locator",
+    "step": 1,
+    "title": "Boutique directory",
+    "caption": "The locator displays the seeded boutique directory using the built-in fallback path; no GPS permission is requested.",
+    "filename": "20-boutique-directory.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Boutique locator",
+    "step": 2,
+    "title": "Pickup location selected",
+    "caption": "The selected boutique is visibly marked in the locator after the user chooses it as the preferred pickup location.",
+    "filename": "21-pickup-store-selected.png",
+    "viewport": "1280 × 720"
   }
 ]

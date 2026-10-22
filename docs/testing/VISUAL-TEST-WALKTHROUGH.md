@@ -2,7 +2,7 @@
 
 > Curated evidence from verified browser states. A screenshot is added only after its UI assertion succeeds; failure screenshots and traces are not embedded in this walkthrough.
 
-**Source commit:** 9ed1fb7451e3b40d8db00ef11f4889c5fef72613  
+**Source commit:** c4a8db80ed07b55d6727237fb8db37b29033d251  
 **Browser:** Chromium controlled by Playwright  
 **Viewport:** Desktop Chrome configuration  
 **Data:** Real catalog, stock, price and promotion records from the application seed. The checkout flow uses a generated example.com account and a local, non-shipping order; no real customer account, live email delivery or payment is used.
@@ -19,6 +19,12 @@ The images follow the user journey from product discovery to order tracking, the
 - **Checkout and order tracking:** 3 screenshot(s)
 - **Product reviews:** 2 screenshot(s)
 - **Order fulfilment:** 2 screenshot(s)
+- **Wishlist:** 1 screenshot(s)
+- **Product comparison:** 1 screenshot(s)
+- **Virtual try-on:** 2 screenshot(s)
+- **Ingredient diagnostics:** 1 screenshot(s)
+- **Beauty personalisation:** 2 screenshot(s)
+- **Boutique locator:** 2 screenshot(s)
 
 ## Storefront
 
@@ -144,6 +150,117 @@ The images follow the user journey from product discovery to order tracking, the
 <h3>02. Order marked Packed</h3>
 <a href="visuals/12-admin-order-updated.png"><img src="visuals/12-admin-order-updated.png" alt="Order marked Packed" width="100%"/></a>
 <p>The UI confirms the change, and the API confirms the persisted Packed status and the Processing → Packed event history.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## Wishlist
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Saved wishlist</h3>
+<a href="visuals/13-saved-wishlist.png"><img src="visuals/13-saved-wishlist.png" alt="Saved wishlist" width="100%"/></a>
+<p>A real seeded catalog product has been saved, and the wishlist drawer displays the selected item before any bag action.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Product comparison
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Side-by-side product comparison</h3>
+<a href="visuals/14-product-comparison.png"><img src="visuals/14-product-comparison.png" alt="Side-by-side product comparison" width="100%"/></a>
+<p>Two seeded catalog products appear together in the comparison matrix, with customer rating, finish, coverage and skin-type attributes.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Virtual try-on
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Virtual try-on studio</h3>
+<a href="visuals/15-virtual-try-on.png"><img src="visuals/15-virtual-try-on.png" alt="Virtual try-on studio" width="100%"/></a>
+<p>The virtual mirror opens for a real foundation from the seeded catalog. The finish control is changed before the screenshot is captured.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>02. Try-on shade added to the bag</h3>
+<a href="visuals/16-vto-shade-added-to-bag.png"><img src="visuals/16-vto-shade-added-to-bag.png" alt="Try-on shade added to the bag" width="100%"/></a>
+<p>After adding the selected finish, the shopping bag opens with the same seeded foundation. This confirms the mirror action reaches the cart drawer.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## Ingredient diagnostics
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Ingredient safety diagnostic</h3>
+<a href="visuals/17-ingredient-diagnostics.png"><img src="visuals/17-ingredient-diagnostics.png" alt="Ingredient safety diagnostic" width="100%"/></a>
+<p>The product diagnostic displays its standard, pore-clog index, formula pH and ingredient safety information for the selected catalog product.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Beauty personalisation
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Personalised shade match</h3>
+<a href="visuals/18-shade-match.png"><img src="visuals/18-shade-match.png" alt="Personalised shade match" width="100%"/></a>
+<p>The deterministic catalog-backed matcher returns an in-stock shade for the selected medium depth and warm undertone; this is not a live Gemini-provider test.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>02. Morning and evening routine</h3>
+<a href="visuals/19-skincare-routine.png"><img src="visuals/19-skincare-routine.png" alt="Morning and evening routine" width="100%"/></a>
+<p>The deterministic routine builder recommends real catalog products in separate AM and PM steps. Live external AI generation remains a separate integration check.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## Boutique locator
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Boutique directory</h3>
+<a href="visuals/20-boutique-directory.png"><img src="visuals/20-boutique-directory.png" alt="Boutique directory" width="100%"/></a>
+<p>The locator displays the seeded boutique directory using the built-in fallback path; no GPS permission is requested.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>02. Pickup location selected</h3>
+<a href="visuals/21-pickup-store-selected.png"><img src="visuals/21-pickup-store-selected.png" alt="Pickup location selected" width="100%"/></a>
+<p>The selected boutique is visibly marked in the locator after the user chooses it as the preferred pickup location.</p>
 <p><em>Viewport: 1280 × 720</em></p>
 </td>
 </tr>
