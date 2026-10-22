@@ -2,37 +2,41 @@
 
 > Curated evidence from verified browser states. A screenshot is added only after its UI assertion succeeds; failure screenshots and traces are not embedded in this walkthrough.
 
-**Source commit:** 228cf733ac3ee653b61d48b1bc8f640c7cd88877  
+**Source commit:** 7c0cc57a18213e020afa6e0ee8ae0d8a2126808c  
 **Browser:** Chromium controlled by Playwright  
 **Viewport:** Desktop Chrome configuration  
 **Data:** Real catalog, stock, price and promotion records from the application seed. The checkout flow uses a generated example.com account and a local, non-shipping order; no real customer account, live email delivery or payment is used.
 
 ## How to read this walkthrough
 
-The images follow the user journey from product discovery to order tracking, then show verified reviews and staff fulfilment. The caption under each image explains the action and the check completed before capture. Open an image to view its original resolution.
+The walkthrough includes catalogue discovery and refinements, account registration, bag/promotion/sample controls, product sizing and bundles, order placement and cancellation, saved lists, comparison, review voting, reward redemption, AI fallback journeys, boutique lookup, responsive navigation, install guidance, offline caching and staff-console workflows. Each caption describes the action and assertion completed before capture. Screenshots demonstrate browser-visible states; API assertions and integration tests separately verify persistence, validation, ownership, pricing and state transitions.
 
 ## Journey coverage
 
 - **Storefront:** 1 screenshot(s)
 - **Storefront browsing:** 1 screenshot(s)
 - **Storefront communication:** 1 screenshot(s)
-- **Product detail tools:** 2 screenshot(s)
+- **Storefront cart controls:** 2 screenshot(s)
+- **Product detail tools:** 3 screenshot(s)
 - **Checkout options:** 2 screenshot(s)
+- **Customer order tracking:** 1 screenshot(s)
 - **Loyalty rewards:** 2 screenshot(s)
 - **AI concierge:** 1 screenshot(s)
 - **Offline catalog:** 1 screenshot(s)
+- **PWA installation:** 1 screenshot(s)
+- **Responsive navigation:** 1 screenshot(s)
 - **Admin console:** 1 screenshot(s)
-- **Product administration:** 2 screenshot(s)
+- **Product administration:** 4 screenshot(s)
 - **Order management:** 1 screenshot(s)
 - **Review moderation:** 1 screenshot(s)
-- **Promotion management:** 2 screenshot(s)
+- **Promotion management:** 4 screenshot(s)
 - **AI, maps and PWA diagnostics:** 1 screenshot(s)
 - **Account creation:** 2 screenshot(s)
 - **Shopping bag and promotion:** 2 screenshot(s)
 - **Checkout and order tracking:** 3 screenshot(s)
-- **Product reviews:** 2 screenshot(s)
+- **Product reviews:** 3 screenshot(s)
 - **Order fulfilment:** 2 screenshot(s)
-- **Wishlist:** 1 screenshot(s)
+- **Wishlist:** 2 screenshot(s)
 - **Product comparison:** 1 screenshot(s)
 - **Virtual try-on:** 2 screenshot(s)
 - **Ingredient diagnostics:** 1 screenshot(s)
@@ -87,6 +91,27 @@ The images follow the user journey from product discovery to order tracking, the
 </tbody>
 </table>
 
+## Storefront cart controls
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Cart quantity, samples and promotion</h3>
+<a href="visuals/41-cart-samples-promo.png"><img src="visuals/41-cart-samples-promo.png" alt="Cart quantity, samples and promotion" width="100%"/></a>
+<p>The bag contains two foundation units, two complimentary samples are selected, and the seeded SAYPHORA20 promotion is applied.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>02. Empty bag after removing the item</h3>
+<a href="visuals/42-cart-empty-state.png"><img src="visuals/42-cart-empty-state.png" alt="Empty bag after removing the item" width="100%"/></a>
+<p>Removing the only cart line leaves the bag in its explicit empty state after the active promotion is removed.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+
 ## Product detail tools
 
 <table>
@@ -104,6 +129,15 @@ The images follow the user journey from product discovery to order tracking, the
 <p>The frequently-paired product builder shows the selected companions and its 15% bundle saving before the bundle is added.</p>
 <p><em>Viewport: 1280 × 720</em></p>
 </td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<h3>03. Product size, quantity and application routine</h3>
+<a href="visuals/43-product-size-and-ritual.png"><img src="visuals/43-product-size-and-ritual.png" alt="Product size, quantity and application routine" width="100%"/></a>
+<p>The 75 mL option and quantity two are selected, the add-to-bag total reflects $144, and the product-specific application-routine tab is opened.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
 </tr>
 </tbody>
 </table>
@@ -125,6 +159,22 @@ The images follow the user journey from product discovery to order tracking, the
 <p>The review step displays pay-on-delivery, the selected gift presentation and the current server-pricing summary before order placement.</p>
 <p><em>Viewport: 1280 × 720</em></p>
 </td>
+</tr>
+</tbody>
+</table>
+
+## Customer order tracking
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Order lookup and eligible cancellation</h3>
+<a href="visuals/45-customer-order-cancelled.png"><img src="visuals/45-customer-order-cancelled.png" alt="Order lookup and eligible cancellation" width="100%"/></a>
+<p>An invalid order number is rejected, the customer’s own order is found, its progress is shown, and cancellation is confirmed by the persisted Cancelled status.</p>
+<p><em>Viewport: 390 × 844</em></p>
+</td>
+<td width="50%" valign="top"></td>
 </tr>
 </tbody>
 </table>
@@ -182,6 +232,38 @@ The images follow the user journey from product discovery to order tracking, the
 </tbody>
 </table>
 
+## PWA installation
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. iOS add-to-home-screen instructions</h3>
+<a href="visuals/47-ios-install-guide.png"><img src="visuals/47-ios-install-guide.png" alt="iOS add-to-home-screen instructions" width="100%"/></a>
+<p>An iPhone Safari-like user-agent triggers the iOS install guidance modal. This validates the guidance UI, not a physical-device installation.</p>
+<p><em>Viewport: 390 × 844</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
+## Responsive navigation
+
+<table>
+<tbody>
+<tr>
+<td width="50%" valign="top">
+<h3>01. Mobile navigation drawer</h3>
+<a href="visuals/46-mobile-navigation.png"><img src="visuals/46-mobile-navigation.png" alt="Mobile navigation drawer" width="100%"/></a>
+<p>At 390 × 844, the compact navigation exposes category selection plus the loyalty, boutique and order-tracking entry points.</p>
+<p><em>Viewport: 390 × 844</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
+</tbody>
+</table>
+
 ## Admin console
 
 <table>
@@ -213,6 +295,20 @@ The images follow the user journey from product discovery to order tracking, the
 <h3>02. New product form</h3>
 <a href="visuals/34-admin-product-create-form.png"><img src="visuals/34-admin-product-create-form.png" alt="New product form" width="100%"/></a>
 <p>The product-creation form exposes the fields used to publish a catalog item; this visual check does not submit test merchandise.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<h3>03. Product successfully published</h3>
+<a href="visuals/48-admin-product-created.png"><img src="visuals/48-admin-product-created.png" alt="Product successfully published" width="100%"/></a>
+<p>The staff user submits the product form and the new test product appears in the inventory table after the server accepts it.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>04. Inventory updated and low-stock filtered</h3>
+<a href="visuals/49-admin-low-stock-update.png"><img src="visuals/49-admin-low-stock-update.png" alt="Inventory updated and low-stock filtered" width="100%"/></a>
+<p>The stock editor persists three units; the low-stock filter still finds the item after the table reloads from server data.</p>
 <p><em>Viewport: 1280 × 720</em></p>
 </td>
 </tr>
@@ -266,6 +362,20 @@ The images follow the user journey from product discovery to order tracking, the
 <h3>02. New promotion form</h3>
 <a href="visuals/38-admin-promo-create-form.png"><img src="visuals/38-admin-promo-create-form.png" alt="New promotion form" width="100%"/></a>
 <p>The promotion form exposes code, discount type, value and description fields. No promotion is created in this visual-only check.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<h3>03. Promotion created from the staff console</h3>
+<a href="visuals/50-admin-promo-created.png"><img src="visuals/50-admin-promo-created.png" alt="Promotion created from the staff console" width="100%"/></a>
+<p>The administrator creates a temporary campaign in the browser and the new active promotion is shown in the persisted promo list.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top">
+<h3>04. Promotion pause state</h3>
+<a href="visuals/51-admin-promo-paused.png"><img src="visuals/51-admin-promo-paused.png" alt="Promotion pause state" width="100%"/></a>
+<p>The administrator pauses the newly created code and the UI reflects its disabled state after the server update.</p>
 <p><em>Viewport: 1280 × 720</em></p>
 </td>
 </tr>
@@ -378,6 +488,15 @@ The images follow the user journey from product discovery to order tracking, the
 <p><em>Viewport: 1280 × 720</em></p>
 </td>
 </tr>
+<tr>
+<td width="50%" valign="top">
+<h3>03. Verified review filter and helpful voting</h3>
+<a href="visuals/44-review-vote-filter.png"><img src="visuals/44-review-vote-filter.png" alt="Verified review filter and helpful voting" width="100%"/></a>
+<p>A second signed-in customer marks another customer’s verified-purchase review helpful and filters the list to verified buyers.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
+<td width="50%" valign="top"></td>
+</tr>
 </tbody>
 </table>
 
@@ -413,7 +532,12 @@ The images follow the user journey from product discovery to order tracking, the
 <p>A real seeded catalog product has been saved, and the wishlist drawer displays the selected item before any bag action.</p>
 <p><em>Viewport: 1280 × 720</em></p>
 </td>
-<td width="50%" valign="top"></td>
+<td width="50%" valign="top">
+<h3>02. Shareable wishlist link</h3>
+<a href="visuals/40-wishlist-share-link.png"><img src="visuals/40-wishlist-share-link.png" alt="Shareable wishlist link" width="100%"/></a>
+<p>The share action copies the storefront link when clipboard access is available and confirms the action in the wishlist UI.</p>
+<p><em>Viewport: 1280 × 720</em></p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -513,6 +637,27 @@ The images follow the user journey from product discovery to order tracking, the
 </tbody>
 </table>
 
+## Feature coverage inventory
+
+- **Storefront and discovery:** catalog rendering, product search/typeahead, category and skin-type selection, clean/sale/price refinements, sorting, grid/editorial views, currency display preference, newsletter confirmation and mobile navigation.
+- **Product experiences:** details, shade and size choices, quantity changes, product image gallery/zoom/lightbox, formulation comparison, curated bundles, virtual try-on controls, ingredient diagnostics and application instructions.
+- **Bag and ordering:** quantity changes, item removal/empty state, complimentary sample selection, promo apply/removal, persistent bag and sign-in gate, shipping validation/speed choices, gift wrap/card message, order creation and calculated totals, points award, tracking lookup, invalid-order rejection and eligible cancellation.
+- **Accounts and community:** registration/sign-in, credential and validation errors, account isolation, profile/beauty-profile and saved-address API checks, wishlist add/share/remove/move-to-bag, review submission/verified-purchase state, rating and buyer filters, helpful voting, review ownership/moderation, and customer-versus-staff permissions.
+- **Retention/personalisation:** Beauty Insider guest/member states, actual reward redemption with point-balance verification, shade matching, AM/PM routine builder, catalogue-backed concierge recommendation and boutique search/pickup selection.
+- **Operations/resilience:** protected staff console tabs, product inventory filters/stock controls/product-create form, order search/status/tracking controls, reviews moderation, promo management/form, analytics/system diagnostics, PWA manifest/service-worker registration, cached catalogue while offline and network status transitions.
+- **API/unit layer:** the CI unit/API suite runs against disposable PostgreSQL and covers authentication/session and role boundaries, catalog/sample/promo/newsletter endpoints, account/address/wishlist isolation, stock/pricing/order rules, review lifecycle/votes, loyalty redemption, AI fallback and migration/security invariants.
+
+## Coverage boundaries — not represented as passed
+
+- Tests run the production build locally against disposable PostgreSQL and synthetic test accounts/addresses. This is not a deployed-domain acceptance test.
+- Gemini-powered UI checks validate the deterministic fallback available without a live credential. Real Gemini requests, quotas, provider failures and response quality with a live key remain unverified.
+- Boutique tests use the seeded directory/fallback. Real Google Maps grounding, live place/review data and real browser GPS permission behavior remain unverified.
+- Newsletter and password-reset contracts are exercised, but actual external SMTP delivery/inbox receipt is not verified.
+- Checkout supports **pay on delivery**; no live card gateway or settlement flow is available to test. Refunds for already-paid orders require an operational payment-system action.
+- Tracking screens and staff-assigned tracking details are checked; live carrier APIs, shipment webhooks and carrier-confirmed delivery events are not verified.
+- Service-worker/offline behavior and a simulated iOS install-help screen are tested. Actual iOS/Android installation on physical devices and push notifications are not verified.
+- CI builds the Docker image but does not verify a complete Docker Compose deployment, production TLS/Secure-cookie behavior, production-domain sessions or backup/recovery procedures.
+
 ---
 
-**Verification note:** The screenshot shows the browser UI at a successful checkpoint. Backend assertions separately verify account ownership, the stored order, server-calculated totals, verified-purchase reviews and persisted fulfilment status. A screenshot alone is not used as proof of those server-side behaviors.
+**Verification note:** Screenshots are captured only after the corresponding browser assertion succeeds. Backend assertions separately verify persisted orders, server-calculated totals, loyalty point changes, review ownership/verification and fulfilment state where exercised. Features requiring external services, devices or credentials are listed above instead of being marked passed.

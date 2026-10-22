@@ -310,5 +310,101 @@
     "caption": "The admin diagnostics page shows AI usage counters, the boutique directory, Google Maps grounding area and the service-worker cache controls.",
     "filename": "39-admin-ai-maps-pwa.png",
     "viewport": "1280 × 720"
+  },
+  {
+    "section": "Wishlist",
+    "step": 2,
+    "title": "Shareable wishlist link",
+    "caption": "The share action copies the storefront link when clipboard access is available and confirms the action in the wishlist UI.",
+    "filename": "40-wishlist-share-link.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Storefront cart controls",
+    "step": 1,
+    "title": "Cart quantity, samples and promotion",
+    "caption": "The bag contains two foundation units, two complimentary samples are selected, and the seeded SAYPHORA20 promotion is applied.",
+    "filename": "41-cart-samples-promo.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Storefront cart controls",
+    "step": 2,
+    "title": "Empty bag after removing the item",
+    "caption": "Removing the only cart line leaves the bag in its explicit empty state after the active promotion is removed.",
+    "filename": "42-cart-empty-state.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product detail tools",
+    "step": 3,
+    "title": "Product size, quantity and application routine",
+    "caption": "The 75 mL option and quantity two are selected, the add-to-bag total reflects $144, and the product-specific application-routine tab is opened.",
+    "filename": "43-product-size-and-ritual.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product reviews",
+    "step": 3,
+    "title": "Verified review filter and helpful voting",
+    "caption": "A second signed-in customer marks another customer’s verified-purchase review helpful and filters the list to verified buyers.",
+    "filename": "44-review-vote-filter.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Customer order tracking",
+    "step": 1,
+    "title": "Order lookup and eligible cancellation",
+    "caption": "An invalid order number is rejected, the customer’s own order is found, its progress is shown, and cancellation is confirmed by the persisted Cancelled status.",
+    "filename": "45-customer-order-cancelled.png",
+    "viewport": "390 × 844"
+  },
+  {
+    "section": "Responsive navigation",
+    "step": 1,
+    "title": "Mobile navigation drawer",
+    "caption": "At 390 × 844, the compact navigation exposes category selection plus the loyalty, boutique and order-tracking entry points.",
+    "filename": "46-mobile-navigation.png",
+    "viewport": "390 × 844"
+  },
+  {
+    "section": "PWA installation",
+    "step": 1,
+    "title": "iOS add-to-home-screen instructions",
+    "caption": "An iPhone Safari-like user-agent triggers the iOS install guidance modal. This validates the guidance UI, not a physical-device installation.",
+    "filename": "47-ios-install-guide.png",
+    "viewport": "390 × 844"
+  },
+  {
+    "section": "Product administration",
+    "step": 3,
+    "title": "Product successfully published",
+    "caption": "The staff user submits the product form and the new test product appears in the inventory table after the server accepts it.",
+    "filename": "48-admin-product-created.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Product administration",
+    "step": 4,
+    "title": "Inventory updated and low-stock filtered",
+    "caption": "The stock editor persists three units; the low-stock filter still finds the item after the table reloads from server data.",
+    "filename": "49-admin-low-stock-update.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Promotion management",
+    "step": 3,
+    "title": "Promotion created from the staff console",
+    "caption": "The administrator creates a temporary campaign in the browser and the new active promotion is shown in the persisted promo list.",
+    "filename": "50-admin-promo-created.png",
+    "viewport": "1280 × 720"
+  },
+  {
+    "section": "Promotion management",
+    "step": 4,
+    "title": "Promotion pause state",
+    "caption": "The administrator pauses the newly created code and the UI reflects its disabled state after the server update.",
+    "filename": "51-admin-promo-paused.png",
+    "viewport": "1280 × 720"
   }
 ]
