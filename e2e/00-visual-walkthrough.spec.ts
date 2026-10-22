@@ -979,13 +979,13 @@ test.describe('curated visual evidence', () => {
     try {
       const placed = await author.post('/api/orders', {
         data: {
-          items: [{ productId: 'fenty-pro-filtr-foundation', quantity: 1 }],
+          items: [{ productId: 'tatcha-water-cream', quantity: 1 }],
           shippingAddress: ADDRESS,
           shippingMethod: 'Standard',
         },
       });
       expect(placed.status()).toBe(201);
-      const created = await author.post('/api/products/fenty-pro-filtr-foundation/reviews', {
+      const created = await author.post('/api/products/tatcha-water-cream/reviews', {
         data: { rating: 5, title: 'QA review feature', comment: 'Absolutely beautiful texture and glow.' },
       });
       expect(created.status()).toBe(201);
@@ -998,7 +998,7 @@ test.describe('curated visual evidence', () => {
       await page.locator('#auth-password').fill(PASSWORD);
       await page.getByRole('button', { name: /Sign In to Account/ }).click();
       await expect(page.getByText('Welcome Back')).toBeVisible();
-      await page.getByRole('heading', { name: "Pro Filt'r Soft Matte Longwear Liquid Foundation" }).first().click();
+      await page.getByRole('heading', { name: "The Water Cream Pore-Refining Hydrating Moisturizer" }).first().click();
       await page.getByRole('button', { name: /Reviews?|Be the first to review/ }).first().click();
       await expect(page.getByText('QA review feature', { exact: true })).toBeVisible();
 
@@ -1028,7 +1028,7 @@ test.describe('curated visual evidence', () => {
     try {
       const created = await buyer.post('/api/orders', {
         data: {
-          items: [{ productId: 'fenty-pro-filtr-foundation', quantity: 1 }],
+          items: [{ productId: 'tatcha-water-cream', quantity: 1 }],
           shippingAddress: ADDRESS,
           shippingMethod: 'Standard',
         },
@@ -1115,6 +1115,93 @@ test.describe('curated visual evidence', () => {
     } finally {
       await context.close();
     }
+  });
+
+
+  test('publishes and archives a product, updates stock, and manages a promo in the admin UI', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Sign In' }).first().click();
+    await page.locator('#auth-email').fill(ADMIN.email);
+    await page.locator('#auth-password').fill(ADMIN.password);
+    await page.getByRole('button', { name: /Sign In to Account/ }).click();
+    await expect(page.getByText('Welcome Back')).toBeVisible();
+    await page.keyboard.press('Control+Shift+A');
+    await expect(page.getByText('Executive Suite')).toBeVisible();
+
+    const productName = 'QA Atelier Item ' + Date.now().toString(36);
+    await page.getByRole('button', { name: 'Product Catalog' }).click();
+    await page.getByRole('button', { name: /Add Product/ }).first().click();
+    const productForm = page.locator('form').filter({ has: page.getByPlaceholder('e.g. Dior Addict Lip Glow Oil') });
+    await productForm.getByPlaceholder('e.g. Dior Addict Lip Glow Oil').fill(productName);
+    await productForm.getByPlaceholder('e.g. DIOR').fill('QA BEAUTY');
+    await productForm.locator('select').selectOption('Skincare');
+    await productForm.locator('input[type="number"]').nth(0).fill('18.50');
+    await productForm.locator('input[type="number"]').nth(1).fill('4');
+    await productForm.locator('input[type="url"]').fill('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop&q=80');
+    await productForm.locator('textarea').fill('Disposable QA item created by the browser suite.');
+    await productForm.getByRole('button', { name: 'Publish to Catalog' }).click();
+    await expect(page.getByText('Product Published')).toBeVisible();
+    const productRow = page.locator('tr', { hasText: productName });
+    await expect(productRow).toBeVisible();
+    await capture(page, {
+      section: 'Product administration',
+      step: 3,
+      filename: '48-admin-product-created',
+      title: 'Product successfully published',
+      caption: 'The staff user submits the product form and the new test product appears in the inventory table after the server accepts it.',
+    });
+
+    const stockInput = productRow.locator('input[type="number"]');
+    await stockInput.fill('3');
+    await stockInput.press('Tab');
+    await expect(page.getByText('Inventory Updated')).toBeVisible();
+    await page.getByRole('button', { name: /Low/ }).click();
+    await expect(productRow.locator('input[type="number"]')).toHaveValue('3');
+    await capture(page, {
+      section: 'Product administration',
+      step: 4,
+      filename: '49-admin-low-stock-update',
+      title: 'Inventory updated and low-stock filtered',
+      caption: 'The stock editor persists three units; the low-stock filter still finds the item after the table reloads from server data.',
+    });
+
+    await productRow.locator('button[title="Archive item"]').click();
+    await expect(page.getByText('Product Archived')).toBeVisible();
+    await expect(productRow).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'VIP Promos & Codes' }).click();
+    const promoCode = 'QA' + Date.now().toString().slice(-10);
+    await page.getByRole('button', { name: 'Create Promo' }).click();
+    const promoForm = page.locator('form').filter({ has: page.getByPlaceholder('e.g. GLOW50') });
+    await promoForm.getByPlaceholder('e.g. GLOW50').fill(promoCode);
+    await promoForm.getByPlaceholder('e.g. 20% off all Lipsticks & Glosses').fill('Temporary browser-test campaign');
+    await promoForm.getByRole('button', { name: 'Activate Promo Code' }).click();
+    const promoText = page.getByText(promoCode, { exact: true });
+    await expect(promoText).toBeVisible();
+    const promoCard = promoText.locator('xpath=ancestor::div[contains(@class,"space-y-3")][1]');
+    await expect(promoCard.getByText('Active', { exact: true })).toBeVisible();
+    await capture(page, {
+      section: 'Promotion management',
+      step: 3,
+      filename: '50-admin-promo-created',
+      title: 'Promotion created from the staff console',
+      caption: 'The administrator creates a temporary campaign in the browser and the new active promotion is shown in the persisted promo list.',
+    });
+
+    await promoCard.getByRole('button', { name: 'Pause Code' }).click();
+    await expect(promoCard.getByText('Disabled', { exact: true })).toBeVisible();
+    await capture(page, {
+      section: 'Promotion management',
+      step: 4,
+      filename: '51-admin-promo-paused',
+      title: 'Promotion pause state',
+      caption: 'The administrator pauses the newly created code and the UI reflects its disabled state after the server update.',
+    });
+    await promoCard.getByRole('button', { name: 'Activate Code' }).click();
+    await expect(promoCard.getByText('Active', { exact: true })).toBeVisible();
+    await promoCard.locator('button').first().click();
+    await expect(page.getByText('Promotion Removed')).toBeVisible();
+    await expect(promoText).toHaveCount(0);
   });
 
 });
