@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths-ignore:
       - 'docs/testing/**'
+      - 'docs/project-walkthrough/**'
   pull_request:
 
 jobs:
@@ -35,94 +36,16 @@ jobs:
       - name: Unit + API integration tests (real PostgreSQL)
         run: npm test
       - run: npx playwright install --with-deps chromium
-      - name: End-to-end tests (production build)
+      - name: End-to-end journeys (production build)
         run: npm run test:e2e
-      - name: Upload screenshots and test results
+      - name: Upload internal CI evidence
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: sayphora-visual-evidence
+          name: sayphora-ci-evidence
           path: test-results/
           if-no-files-found: warn
           retention-days: 14
-
-
-  publish-visuals:
-    if: ${{ needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: [test, docker]
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-      - uses: actions/download-artifact@v4
-        with:
-          name: sayphora-visual-evidence
-          path: .visual-evidence
-      - name: Publish curated screenshots and Markdown report
-        env:
-          SOURCE_SHA: ${{ github.sha }}
-          SOURCE_RUN_ID: ${{ github.run_id }}
-          SOURCE_REPOSITORY: ${{ github.repository }}
-        run: |
-          test -f .visual-evidence/VISUAL-TEST-WALKTHROUGH.md
-          test -f .visual-evidence/visuals/manifest.json
-          mkdir -p docs/testing/visuals
-          rm -f docs/testing/visuals/*.png
-          cp .visual-evidence/VISUAL-TEST-WALKTHROUGH.md docs/testing/VISUAL-TEST-WALKTHROUGH.md
-          cp .visual-evidence/visuals/*.png docs/testing/visuals/
-          cp .visual-evidence/visuals/manifest.json docs/testing/visuals/manifest.json
-          E2E_COUNT=$(node -e "const r=require('./.visual-evidence/playwright-report.json'); console.log(r.stats?.expected ?? 'see CI log')")
-          SCREENSHOT_COUNT=$(find .visual-evidence/visuals -maxdepth 1 -name '*.png' -type f | wc -l | tr -d ' ')
-          cat > docs/testing/README.md <<'EOF'
-          # Sayphora Test Evidence
-
-          This folder contains the successful, CI-generated browser walkthrough and its screenshot evidence.
-
-          - [Visual walkthrough](VISUAL-TEST-WALKTHROUGH.md) — screenshots embedded in an ordered, captioned Markdown journey.
-          - [Latest CI test report](TEST-REPORT.md) — unit/API, Playwright and Docker check results.
-          - [Full-resolution screenshots](visuals/) — individual PNG evidence plus the capture manifest.
-
-          Only screenshots from the successful visual checkpoints are published here. Failure screenshots, browser traces, cookies, tokens and production data are not published.
-          EOF
-          cat > docs/testing/TEST-REPORT.md <<EOF
-          # Sayphora — CI Test Report
-
-          **Result:** PASS  
-          **Tested source commit:** [${SOURCE_SHA}](https://github.com/${SOURCE_REPOSITORY}/commit/${SOURCE_SHA})  
-          **CI run:** [Run #${SOURCE_RUN_ID}](https://github.com/${SOURCE_REPOSITORY}/actions/runs/${SOURCE_RUN_ID})  
-          **Branch:** main
-
-          | Check | Result |
-          |---|---|
-          | Clean dependency install (`npm ci`) | PASS |
-          | TypeScript validation (`npm run typecheck`) | PASS |
-          | Unit and API integration suite | PASS — 110 tests across 9 files |
-          | Playwright browser suite | PASS — ${E2E_COUNT} tests |
-          | Docker image build | PASS — the required CI job must also succeed for the overall workflow to be green |
-          | Visual walkthrough | PASS — ${SCREENSHOT_COUNT} curated screenshots |
-
-          The tests run in CI using a disposable PostgreSQL 16 service and Chromium. The visual journeys use the application's seeded catalog, prices, stock and promotions plus synthetic example.com customer accounts. No production customer accounts, production database, live payment, or live email delivery are used.
-
-          ## Coverage
-
-          The suite checks catalogue rendering, registration, authentication and validation errors, cart persistence, stock rules, promotions, checkout, server-calculated order totals, order tracking, verified-purchase reviews, staff authorization, order status changes, API routing, migrations and selected security behaviors.
-
-          ## Scope limits
-
-          This passing run does not by itself verify every production domain, every device/browser combination, live external AI providers, live email delivery, payment-provider settlement, real shipping carrier integrations, or the deployed production environment. Those need separate credentials and environment-specific checks.
-          EOF
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/testing
-          if git diff --cached --quiet; then
-            echo "Curated visual evidence is already current; no commit needed."
-          else
-            git commit -m "Publish verified visual test evidence"
-            git push origin HEAD:main
-          fi
 
   docker:
     runs-on: ubuntu-24.04
