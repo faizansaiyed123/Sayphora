@@ -30,6 +30,19 @@ const manifestPath = path.join(imageDir, 'manifest.json');
 const reportPath = path.join(resultDir, 'VISUAL-TEST-WALKTHROUGH.md');
 const sectionOrder = [
   'Storefront',
+  'Storefront browsing',
+  'Storefront communication',
+  'Product detail tools',
+  'Checkout options',
+  'Loyalty rewards',
+  'AI concierge',
+  'Offline catalog',
+  'Admin console',
+  'Product administration',
+  'Order management',
+  'Review moderation',
+  'Promotion management',
+  'AI, maps and PWA diagnostics',
   'Account creation',
   'Shopping bag and promotion',
   'Checkout and order tracking',
@@ -500,6 +513,358 @@ test.describe('curated visual evidence', () => {
       filename: '21-pickup-store-selected',
       title: 'Pickup location selected',
       caption: 'The selected boutique is visibly marked in the locator after the user chooses it as the preferred pickup location.',
+    });
+  });
+
+
+  test('covers catalogue refinement, currency selection and newsletter signup', async ({ page }) => {
+    await page.goto('/');
+    const search = page.getByPlaceholder('Search products, brands, ingredients, shades... (Press /)');
+    await search.fill('Tatcha');
+    await expect(page.getByText('Product Matches')).toBeVisible();
+    await expect(page.getByText('The Water Cream Pore-Refining Hydrating Moisturizer').first()).toBeVisible();
+    await search.fill('');
+
+    await page.getByRole('button', { name: /^Skincare\s+\d+$/ }).click();
+    await expect(page.getByText('The Water Cream Pore-Refining Hydrating Moisturizer').first()).toBeVisible();
+    await page.locator('select').nth(0).selectOption('price-asc');
+    await expect(page.locator('select').nth(0)).toHaveValue('price-asc');
+    await page.locator('select').nth(1).selectOption('Dry');
+    await expect(page.locator('select').nth(1)).toHaveValue('Dry');
+    await page.getByRole('button', { name: '2-Column Editorial Magazine View' }).click();
+    await page.getByRole('button', { name: 'Under $50', exact: true }).click();
+    await expect(page.getByText(/Showing\s+\d+\s+items/).first()).toBeVisible();
+    await capture(page, {
+      section: 'Storefront browsing',
+      step: 1,
+      filename: '22-storefront-refinements',
+      title: 'Catalogue filtering, sorting and editorial view',
+      caption: 'The browser search finds the catalog product, then category, price order, skin-type and under-$50 refinements plus the editorial layout are changed and checked.',
+    });
+
+    await page.getByRole('button', { name: 'Change currency' }).click();
+    await page.getByRole('button', { name: /EUR/ }).last().click();
+    await expect(page.getByRole('button', { name: 'Change currency' })).toContainText('EUR');
+    const newsletterEmail = 'newsletter-' + Date.now() + '@example.com';
+    const emailField = page.getByPlaceholder('Enter your email address');
+    await emailField.scrollIntoViewIfNeeded();
+    await emailField.fill(newsletterEmail);
+    await page.getByRole('button', { name: 'Join', exact: true }).click();
+    await expect(page.getByText('Thank you for subscribing.')).toBeVisible();
+    await capture(page, {
+      section: 'Storefront communication',
+      step: 1,
+      filename: '23-newsletter-currency',
+      title: 'Currency preference and newsletter confirmation',
+      caption: 'The display currency changes to EUR and the newsletter form confirms a subscription using a synthetic example.com address.',
+    });
+  });
+
+  test('checks product image tools and the curated bundle-to-bag action', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('heading', { name: "Pro Filt'r Soft Matte Longwear Liquid Foundation" }).first().click();
+
+    await page.getByRole('button', { name: 'Expand Ultra-HD Lightbox' }).click();
+    await expect(page.getByText('Ultra-HD Texture Inspection')).toBeVisible();
+    await capture(page, {
+      section: 'Product detail tools',
+      step: 1,
+      filename: '24-product-gallery-lightbox',
+      title: 'Product image lightbox',
+      caption: 'The product image opens in the full-screen inspection lightbox and exposes its dedicated close control.',
+    });
+    await page.getByRole('button', { name: 'Close lightbox' }).click();
+    await page.getByRole('button', { name: '3.5x', exact: true }).click();
+    await page.getByRole('button', { name: 'Floating Loupe' }).click();
+    await expect(page.getByRole('button', { name: 'Full Pan' })).toBeVisible();
+    await page.getByRole('button', { name: /Texture & Pigment Macro/ }).click();
+
+    const addBundle = page.getByRole('button', { name: 'Add Complete Routine to Bag' });
+    await addBundle.scrollIntoViewIfNeeded();
+    await expect(page.getByText('Save 15% as Bundle')).toBeVisible();
+    await capture(page, {
+      section: 'Product detail tools',
+      step: 2,
+      filename: '25-product-bundle-builder',
+      title: 'Curated product bundle',
+      caption: 'The frequently-paired product builder shows the selected companions and its 15% bundle saving before the bundle is added.',
+    });
+    await addBundle.click();
+    await expect(page.getByRole('heading', { name: 'Shopping Bag', exact: true })).toBeVisible();
+    await expect(page.getByText('Curated Bundle Added')).toBeVisible();
+  });
+
+  test('checks delivery selection, gift packaging and the saved order details', async ({ page }) => {
+    const { ctx: buyer, email } = await registerViaApi();
+    try {
+      await page.goto('/');
+      await page.getByRole('button', { name: 'Sign In' }).first().click();
+      await page.locator('#auth-email').fill(email);
+      await page.locator('#auth-password').fill(PASSWORD);
+      await page.getByRole('button', { name: /Sign In to Account/ }).click();
+      await expect(page.getByText('Welcome Back')).toBeVisible();
+
+      const firstProduct = page.getByRole('button', { name: /Add to Bag/ }).first();
+      await firstProduct.scrollIntoViewIfNeeded();
+      await firstProduct.click({ force: true });
+      await expect(page.getByRole('button', { name: /Proceed to Checkout/ })).toBeVisible();
+      await page.getByRole('button', { name: /Proceed to Checkout/ }).click();
+      await page.locator('#co-name').fill('Olivia Bennett');
+      await page.locator('#co-street').fill(ADDRESS.street);
+      await page.locator('#co-city').fill(ADDRESS.city);
+      await page.locator('#co-state').fill(ADDRESS.state);
+      await page.locator('#co-zip').fill(ADDRESS.zipCode);
+      await page.locator('#co-country').fill(ADDRESS.country);
+      await page.getByRole('radio', { name: /Express Priority/ }).click();
+      await page.getByLabel('Save this address to my account').check();
+      await page.getByLabel('Add gift packaging').check();
+      await page.getByRole('button', { name: /Signature Black Box/ }).click();
+      await page.locator('#co-card').fill('Celebrating you!');
+      await capture(page, {
+        section: 'Checkout options',
+        step: 1,
+        filename: '26-checkout-gift-options',
+        title: 'Express delivery and gift options',
+        caption: 'The shipping step selects express delivery, enables address saving, and configures a gift box and message before reviewing the order.',
+      });
+
+      await page.getByRole('button', { name: /Continue to Review/ }).click();
+      await expect(page.getByText('Pay on delivery')).toBeVisible();
+      await expect(page.getByText(/Gift Packaging \(Signature Black & Gold Box\)/)).toBeVisible();
+      await capture(page, {
+        section: 'Checkout options',
+        step: 2,
+        filename: '27-checkout-gift-review',
+        title: 'Checkout review with gift packaging',
+        caption: 'The review step displays pay-on-delivery, the selected gift presentation and the current server-pricing summary before order placement.',
+      });
+      await page.getByRole('button', { name: /Place Order/ }).click();
+      await expect(page.getByText(/Order #SAY-\d+ Confirmed/)).toBeVisible();
+
+      const mine = await (await buyer.get('/api/me/orders')).json();
+      expect(mine.orders).toHaveLength(1);
+      const savedOrder = mine.orders[0];
+      expect(savedOrder.shippingMethod).toBe('Express');
+      expect(savedOrder.giftFee).toBeGreaterThan(0);
+      expect(savedOrder.giftOption).toMatchObject({
+        isGift: true,
+        giftWrapType: 'Signature Black & Gold Box',
+        cardMessage: 'Celebrating you!',
+      });
+      const profile = await (await buyer.get('/api/auth/me')).json();
+      await expect.poll(() => Promise.resolve(profile.user.savedAddresses?.length ?? 0)).toBeGreaterThan(0);
+    } finally {
+      await buyer.dispose();
+    }
+  });
+
+  test('redeems a loyalty reward from the member UI and checks the points ledger', async ({ page }) => {
+    const { ctx: buyer, email } = await registerViaApi();
+    try {
+      const placed = await buyer.post('/api/orders', {
+        data: {
+          items: [{ productId: 'tatcha-water-cream', quantity: 2 }],
+          shippingAddress: ADDRESS,
+          shippingMethod: 'Standard',
+        },
+      });
+      expect(placed.status()).toBe(201);
+      const before = (await (await buyer.get('/api/auth/me')).json()).user;
+      expect(before.points).toBeGreaterThanOrEqual(100);
+
+      await page.goto('/');
+      await page.getByRole('button', { name: 'Sign In' }).first().click();
+      await page.locator('#auth-email').fill(email);
+      await page.locator('#auth-password').fill(PASSWORD);
+      await page.getByRole('button', { name: /Sign In to Account/ }).click();
+      await expect(page.getByText('Welcome Back')).toBeVisible();
+      await page.getByRole('button', { name: /Beauty Insider.*pts/ }).first().click();
+      await expect(page.getByRole('heading', { name: 'Beauty Insider Club' })).toBeVisible();
+      await expect(page.getByText('Rewards Balance')).toBeVisible();
+      await expect(page.getByText('Rare Beauty Miniature', { exact: true })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Redeem', exact: true }).first()).toBeEnabled();
+      await capture(page, {
+        section: 'Loyalty rewards',
+        step: 1,
+        filename: '28-loyalty-bazaar',
+        title: 'Member rewards bazaar',
+        caption: 'An authenticated member sees the balance and a redeemable reward after an order has earned enough points.',
+      });
+
+      await page.getByRole('button', { name: 'Redeem', exact: true }).first().click();
+      await expect(page.getByText(/Redeemed Rare Beauty Miniature!/)).toBeVisible();
+      await expect(page.getByText('Your reward codes', { exact: true })).toBeVisible();
+      await capture(page, {
+        section: 'Loyalty rewards',
+        step: 2,
+        filename: '29-loyalty-redemption',
+        title: 'Reward code issued',
+        caption: 'Redeeming the reward produces a customer-visible single-use code and updates the member’s available points.',
+      });
+
+      const after = (await (await buyer.get('/api/auth/me')).json()).user;
+      expect(after.points).toBe(before.points - 100);
+    } finally {
+      await buyer.dispose();
+    }
+  });
+
+  test('runs the concierge chat and verifies a catalogue-backed recommendation', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('button[title="AI Shade Matcher & Skin Regimen Builder"]').click();
+    await page.getByRole('button', { name: 'Haute Concierge Stylist' }).click();
+    const prompt = 'I need a hydrating product for dry skin';
+    const chatInput = page.getByPlaceholder('Ask about skin concerns, shade combinations, or event styling...');
+    await chatInput.fill(prompt);
+    const chatForm = page.locator('form').filter({ has: chatInput });
+    await chatForm.getByRole('button').click();
+    await expect(page.getByText(prompt, { exact: true })).toBeVisible();
+    const studio = page.locator('div.fixed.inset-0').last();
+    await expect(studio.getByRole('button', { name: 'Add to Bag', exact: true })).toBeVisible({ timeout: 20_000 });
+    await capture(page, {
+      section: 'AI concierge',
+      step: 1,
+      filename: '30-ai-concierge',
+      title: 'Concierge product recommendation',
+      caption: 'A visitor asks the concierge for hydration help and receives a recommendation tied to a product in the seeded catalogue. CI uses the configured fallback when no live Gemini credential is supplied.',
+    });
+  });
+
+  test('validates the production PWA manifest, service worker and cached catalogue offline', async ({ page }) => {
+    const manifestResponse = await page.request.get('/manifest.webmanifest');
+    expect(manifestResponse.status()).toBe(200);
+    const manifest = await manifestResponse.json();
+    expect(manifest.short_name).toBe('Sayphora');
+    expect(manifest.display).toBe('standalone');
+
+    await page.goto('/');
+    await expect(page.getByText("Pro Filt'r").first()).toBeVisible();
+    await expect.poll(() => page.evaluate(() =>
+      navigator.serviceWorker.getRegistrations().then((registrations) => registrations.length)
+    )).toBeGreaterThan(0);
+    await page.reload();
+    await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
+
+    const live = await page.evaluate(async () => {
+      const response = await fetch('/api/products');
+      const payload = await response.json();
+      return { ok: response.ok, count: payload.count ?? payload.products?.length ?? 0 };
+    });
+    expect(live.ok).toBe(true);
+    expect(live.count).toBe(12);
+
+    await page.context().setOffline(true);
+    try {
+      await expect(page.getByLabel('Offline mode notification')).toBeVisible();
+      const cached = await page.evaluate(async () => {
+        const response = await fetch('/api/products');
+        const payload = await response.json();
+        return { ok: response.ok, count: payload.count ?? payload.products?.length ?? 0 };
+      });
+      expect(cached).toMatchObject({ ok: true, count: 12 });
+      await expect(page.getByText('Offline Mode Active')).toBeVisible();
+      await capture(page, {
+        section: 'Offline catalog',
+        step: 1,
+        filename: '31-pwa-offline-catalog',
+        title: 'Cached product catalogue while offline',
+        caption: 'The production web app exposes a standalone manifest and registered service worker; after the public catalogue is cached, the browser retrieves its twelve products while network access is disabled.',
+      });
+    } finally {
+      await page.context().setOffline(false);
+    }
+  });
+
+  test('walks the staff console tabs and opens catalogue and promotion forms', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Sign In' }).first().click();
+    await page.locator('#auth-email').fill(ADMIN.email);
+    await page.locator('#auth-password').fill(ADMIN.password);
+    await page.getByRole('button', { name: /Sign In to Account/ }).click();
+    await expect(page.getByText('Welcome Back')).toBeVisible();
+    await page.keyboard.press('Control+Shift+A');
+    await expect(page.getByText('Executive Suite')).toBeVisible();
+    await capture(page, {
+      section: 'Admin console',
+      step: 1,
+      filename: '32-admin-overview',
+      title: 'Staff executive overview',
+      caption: 'The seeded administrator enters the protected operations console and sees its analytics overview.',
+    });
+
+    await page.getByRole('button', { name: 'Product Catalog' }).click();
+    await expect(page.getByPlaceholder('Search title, brand...')).toBeVisible();
+    await expect(page.getByText('Item & Formula')).toBeVisible();
+    await capture(page, {
+      section: 'Product administration',
+      step: 1,
+      filename: '33-admin-product-catalog',
+      title: 'Product inventory and stock controls',
+      caption: 'The product tab exposes catalog search, category and stock filters, inventory editing, ratings and archive actions.',
+    });
+    await page.getByRole('button', { name: /Add Product/ }).first().click();
+    await expect(page.getByRole('heading', { name: 'Add New Prestige Product' })).toBeVisible();
+    await capture(page, {
+      section: 'Product administration',
+      step: 2,
+      filename: '34-admin-product-create-form',
+      title: 'New product form',
+      caption: 'The product-creation form exposes the fields used to publish a catalog item; this visual check does not submit test merchandise.',
+    });
+    await page.locator('div.fixed.inset-0').last().getByRole('button').first().click();
+    await expect(page.getByRole('heading', { name: 'Add New Prestige Product' })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Orders & Fulfillment' }).click();
+    await expect(page.getByPlaceholder('Search Order ID, Client, City...')).toBeVisible();
+    await capture(page, {
+      section: 'Order management',
+      step: 1,
+      filename: '35-admin-order-management',
+      title: 'Order queue and fulfilment controls',
+      caption: 'The staff orders tab exposes order search, status filtering, tracking-code entry and guarded fulfillment transitions.',
+    });
+
+    await page.getByRole('button', { name: 'Customer Reviews' }).click();
+    await expect(page.getByText('Client Review Moderation')).toBeVisible();
+    await capture(page, {
+      section: 'Review moderation',
+      step: 1,
+      filename: '36-admin-review-moderation',
+      title: 'Customer review moderation',
+      caption: 'The protected review console lists customer feedback, verified-buyer markers and moderation actions.',
+    });
+
+    await page.getByRole('button', { name: 'VIP Promos & Codes' }).click();
+    await expect(page.getByText('VIP Promotion Codes & Privileges')).toBeVisible();
+    await capture(page, {
+      section: 'Promotion management',
+      step: 1,
+      filename: '37-admin-promotion-management',
+      title: 'Promotion code administration',
+      caption: 'The promotion tab displays active campaigns and redemption counts with controls to create, activate, deactivate and remove codes.',
+    });
+    await page.getByRole('button', { name: 'Create Promo' }).first().click();
+    await expect(page.getByRole('heading', { name: 'Create New VIP Promo Code' })).toBeVisible();
+    await capture(page, {
+      section: 'Promotion management',
+      step: 2,
+      filename: '38-admin-promo-create-form',
+      title: 'New promotion form',
+      caption: 'The promotion form exposes code, discount type, value and description fields. No promotion is created in this visual-only check.',
+    });
+    await page.locator('div.fixed.inset-0').last().getByRole('button').first().click();
+    await expect(page.getByRole('heading', { name: 'Create New VIP Promo Code' })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'AI Diagnostics & Maps' }).click();
+    await expect(page.getByText('AI Assistant Usage')).toBeVisible();
+    await expect(page.getByText('Google Maps Grounding & Boutique Network')).toBeVisible();
+    await expect(page.getByText('PWA Service Worker & Offline Cache')).toBeVisible();
+    await capture(page, {
+      section: 'AI, maps and PWA diagnostics',
+      step: 1,
+      filename: '39-admin-ai-maps-pwa',
+      title: 'AI, Maps and PWA diagnostics',
+      caption: 'The admin diagnostics page shows AI usage counters, the boutique directory, Google Maps grounding area and the service-worker cache controls.',
     });
   });
 
