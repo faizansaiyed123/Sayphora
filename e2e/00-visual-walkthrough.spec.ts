@@ -429,7 +429,7 @@ test.describe('curated visual evidence', () => {
     });
     await page.getByRole('button', { name: /Add Tested Shade to Bag/ }).click();
     await expect(page.getByText('Live Virtual Mirror', { exact: true })).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: 'Shopping Bag' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Shopping Bag', exact: true })).toBeVisible();
     await expect(page.getByText("Pro Filt'r Soft Matte Longwear Liquid Foundation").last()).toBeVisible();
     await capture(page, {
       section: 'Virtual try-on',
