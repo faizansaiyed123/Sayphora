@@ -4,6 +4,13 @@ A full-stack storefront: **React 19 + Vite + Tailwind 4** frontend, **Express 4 
 Everything the UI shows is backed by the API and database: accounts, catalogue, cart pricing, orders, stock, reviews,
 wishlist, loyalty tiers & rewards, promo codes, AI beauty tools, admin console and analytics.
 
+## Visual showcase
+
+**[View all 51 screenshots and before/after journeys →](docs/testing/VISUAL-TEST-WALKTHROUGH.md)**
+
+The gallery pairs real tested states across registration, shopping, checkout, product tools, loyalty and staff operations. It includes mobile/PWA views, links each image to its full-size capture, and states which live integrations and production behaviors remain unverified.
+
+
 ```
 shared/commerce.ts      pricing, tiers, order-status rules — used by BOTH server (authoritative) and storefront (display)
 server/                 Express API (routes/, services/, middleware/, db/ migrations + seed, cli.ts)
@@ -60,10 +67,6 @@ several replicas can start at once). `npm run db:status` lists applied/pending. 
 
 CI/CD: `.github/workflows/ci.yml` runs typecheck, unit + API tests on a Postgres service, Playwright E2E on the
 production build, and a Docker image build.
-
-## Visual showcase
-
-**[Open the Sayphora visual showcase](docs/testing/VISUAL-TEST-WALKTHROUGH.md)** — 51 inline screenshots arranged into before/after customer journeys, product feature comparisons, mobile/PWA views and staff-console workflows. Each image opens full size, and the page documents which external integrations and production behaviors have not been verified.
 
 ## Testing
 
