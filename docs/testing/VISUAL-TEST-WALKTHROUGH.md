@@ -2,7 +2,7 @@
 
 > Curated evidence from verified browser states. A screenshot is added only after its UI assertion succeeds; failure screenshots and traces are not embedded in this walkthrough.
 
-**Source commit:** 0d389c912126d14407b3dce836b4c6ffed59eb90  
+**Source commit:** db446bab441ec829ffac6b6974d60ebaf6930bfb  
 **Browser:** Chromium controlled by Playwright  
 **Viewport:** Desktop Chrome configuration  
 **Data:** Real catalog, stock, price and promotion records from the application seed. The checkout flow uses a generated example.com account and a local, non-shipping order; no real customer account, live email delivery or payment is used.
