@@ -1002,11 +1002,14 @@ test.describe('curated visual evidence', () => {
       await page.getByRole('button', { name: /Reviews?|Be the first to review/ }).first().click();
       await expect(page.getByText('QA review feature', { exact: true })).toBeVisible();
 
+      const reviewCard = page.locator('div.p-5.bg-white.rounded-2xl')
+        .filter({ has: page.getByText('QA review feature', { exact: true }) });
+      await expect(reviewCard).toHaveCount(1);
       const voteResponse = page.waitForResponse((response) =>
         response.url().includes('/api/reviews/' + reviewData.id + '/vote') &&
         response.request().method() === 'POST',
       );
-      await page.locator('button[title="Mark review as helpful"]').first().click();
+      await reviewCard.locator('button[title="Mark review as helpful"]').click();
       expect((await voteResponse).ok()).toBe(true);
       await page.getByRole('button', { name: /Verified Buyers Only/ }).click();
       await expect(page.getByText('QA review feature', { exact: true })).toBeVisible();
@@ -1132,8 +1135,8 @@ test.describe('curated visual evidence', () => {
     await page.getByRole('button', { name: 'Product Catalog' }).click();
     await page.getByRole('button', { name: /Add Product/ }).first().click();
     const productForm = page.locator('form').filter({ has: page.getByPlaceholder('e.g. Dior Addict Lip Glow Oil') });
-    await productForm.getByPlaceholder('e.g. Dior Addict Lip Glow Oil').fill(productName);
-    await productForm.getByPlaceholder('e.g. DIOR').fill('QA BEAUTY');
+    await productForm.getByPlaceholder('e.g. Dior Addict Lip Glow Oil', { exact: true }).fill(productName);
+    await productForm.getByPlaceholder('e.g. DIOR', { exact: true }).fill('QA BEAUTY');
     await productForm.locator('select').selectOption('Skincare');
     await productForm.locator('input[type="number"]').nth(0).fill('18.50');
     await productForm.locator('input[type="number"]').nth(1).fill('4');
@@ -1173,8 +1176,8 @@ test.describe('curated visual evidence', () => {
     const promoCode = 'QA' + Date.now().toString().slice(-10);
     await page.getByRole('button', { name: 'Create Promo' }).click();
     const promoForm = page.locator('form').filter({ has: page.getByPlaceholder('e.g. GLOW50') });
-    await promoForm.getByPlaceholder('e.g. GLOW50').fill(promoCode);
-    await promoForm.getByPlaceholder('e.g. 20% off all Lipsticks & Glosses').fill('Temporary browser-test campaign');
+    await promoForm.getByPlaceholder('e.g. GLOW50', { exact: true }).fill(promoCode);
+    await promoForm.getByPlaceholder('e.g. 20% off all Lipsticks & Glosses', { exact: true }).fill('Temporary browser-test campaign');
     await promoForm.getByRole('button', { name: 'Activate Promo Code' }).click();
     const promoText = page.getByText(promoCode, { exact: true });
     await expect(promoText).toBeVisible();
