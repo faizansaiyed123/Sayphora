@@ -949,4 +949,149 @@ test.describe('curated visual evidence', () => {
     await expect(page.getByRole('heading', { name: 'Shopping Bag', exact: true })).toBeVisible();
   });
 
+
+  test('filters reviews and records a helpful vote on another customer review', async ({ page }) => {
+    const { ctx: author } = await registerViaApi();
+    const { ctx: voter, email } = await registerViaApi();
+    try {
+      const placed = await author.post('/api/orders', {
+        data: {
+          items: [{ productId: 'fenty-pro-filtr-foundation', quantity: 1 }],
+          shippingAddress: ADDRESS,
+          shippingMethod: 'Standard',
+        },
+      });
+      expect(placed.status()).toBe(201);
+      const created = await author.post('/api/products/fenty-pro-filtr-foundation/reviews', {
+        data: { rating: 5, title: 'QA review feature', comment: 'Absolutely beautiful texture and glow.' },
+      });
+      expect(created.status()).toBe(201);
+      const reviewData = (await created.json()).review;
+      expect(reviewData.verifiedPurchase).toBe(true);
+
+      await page.goto('/');
+      await page.getByRole('button', { name: 'Sign In' }).first().click();
+      await page.locator('#auth-email').fill(email);
+      await page.locator('#auth-password').fill(PASSWORD);
+      await page.getByRole('button', { name: /Sign In to Account/ }).click();
+      await expect(page.getByText('Welcome Back')).toBeVisible();
+      await page.getByRole('heading', { name: "Pro Filt'r Soft Matte Longwear Liquid Foundation" }).first().click();
+      await page.getByRole('button', { name: /Reviews?|Be the first to review/ }).first().click();
+      await expect(page.getByText('QA review feature', { exact: true })).toBeVisible();
+
+      const voteResponse = page.waitForResponse((response) =>
+        response.url().includes('/api/reviews/' + reviewData.id + '/vote') &&
+        response.request().method() === 'POST',
+      );
+      await page.locator('button[title="Mark review as helpful"]').first().click();
+      expect((await voteResponse).ok()).toBe(true);
+      await page.getByRole('button', { name: /Verified Buyers Only/ }).click();
+      await expect(page.getByText('QA review feature', { exact: true })).toBeVisible();
+      await capture(page, {
+        section: 'Product reviews',
+        step: 3,
+        filename: '44-review-vote-filter',
+        title: 'Verified review filter and helpful voting',
+        caption: 'A second signed-in customer marks another customer’s verified-purchase review helpful and filters the list to verified buyers.',
+      });
+    } finally {
+      await author.dispose();
+      await voter.dispose();
+    }
+  });
+
+  test('looks up and cancels an eligible customer order through tracking', async ({ page }) => {
+    const { ctx: buyer, email } = await registerViaApi();
+    try {
+      const created = await buyer.post('/api/orders', {
+        data: {
+          items: [{ productId: 'fenty-pro-filtr-foundation', quantity: 1 }],
+          shippingAddress: ADDRESS,
+          shippingMethod: 'Standard',
+        },
+      });
+      expect(created.status()).toBe(201);
+      const order = (await created.json()).order;
+
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto('/');
+      await page.getByRole('button', { name: 'Sign In' }).first().click();
+      await page.locator('#auth-email').fill(email);
+      await page.locator('#auth-password').fill(PASSWORD);
+      await page.getByRole('button', { name: /Sign In to Account/ }).click();
+      await expect(page.getByText('Welcome Back')).toBeVisible();
+      await page.getByRole('button', { name: 'Toggle menu' }).click();
+      await page.getByRole('button', { name: 'Track an Order', exact: true }).click();
+
+      const tracking = page.getByRole('dialog', { name: 'Track your order' });
+      await expect(tracking).toBeVisible();
+      await tracking.getByLabel('Order number').fill('SAY-99999999');
+      await tracking.getByRole('button', { name: 'Find', exact: true }).click();
+      await expect(tracking.getByRole('alert')).toContainText('No order with that number');
+      await tracking.getByLabel('Order number').fill(order.orderNumber);
+      await tracking.getByRole('button', { name: 'Find', exact: true }).click();
+      await expect(tracking.getByRole('list', { name: 'Order progress' })).toBeVisible();
+      await expect(tracking.getByRole('button', { name: 'Cancel this order' })).toBeVisible();
+
+      page.once('dialog', (dialog) => dialog.accept());
+      await tracking.getByRole('button', { name: 'Cancel this order' }).click();
+      await expect(tracking.getByText('This order was cancelled')).toBeVisible();
+      const persisted = (await (await buyer.get('/api/me/orders')).json()).orders;
+      expect(persisted.find((candidate: { id: string }) => candidate.id === order.id)?.status).toBe('Cancelled');
+      await capture(page, {
+        section: 'Customer order tracking',
+        step: 1,
+        filename: '45-customer-order-cancelled',
+        title: 'Order lookup and eligible cancellation',
+        caption: 'An invalid order number is rejected, the customer’s own order is found, its progress is shown, and cancellation is confirmed by the persisted Cancelled status.',
+      });
+    } finally {
+      await buyer.dispose();
+    }
+  });
+
+  test('checks responsive navigation and primary mobile utility links', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    const menuToggle = page.getByRole('button', { name: 'Toggle menu' });
+    await expect(menuToggle).toBeVisible();
+    await menuToggle.click();
+    await expect(page.getByText('Categories', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Beauty Insider Loyalty Rewards' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Find Boutiques & Ateliers' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Track an Order', exact: true })).toBeVisible();
+    await capture(page, {
+      section: 'Responsive navigation',
+      step: 1,
+      filename: '46-mobile-navigation',
+      title: 'Mobile navigation drawer',
+      caption: 'At 390 × 844, the compact navigation exposes category selection plus the loyalty, boutique and order-tracking entry points.',
+    });
+  });
+
+  test('shows the iOS add-to-home-screen guide for a Safari-like browser', async ({ browser }) => {
+    const context = await browser.newContext({
+      baseURL: BASE,
+      viewport: { width: 390, height: 844 },
+      userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+    });
+    try {
+      const page = await context.newPage();
+      await page.goto('/');
+      const installButton = page.locator('button[title="Add to Home Screen on iOS"]').first();
+      await expect(installButton).toBeVisible();
+      await installButton.click();
+      await expect(page.getByRole('heading', { name: 'Install on iOS Safari' })).toBeVisible();
+      await capture(page, {
+        section: 'PWA installation',
+        step: 1,
+        filename: '47-ios-install-guide',
+        title: 'iOS add-to-home-screen instructions',
+        caption: 'An iPhone Safari-like user-agent triggers the iOS install guidance modal. This validates the guidance UI, not a physical-device installation.',
+      });
+    } finally {
+      await context.close();
+    }
+  });
+
 });
