@@ -209,8 +209,14 @@ test.describe('staff console', () => {
 
   test('admin sees real data and can advance an order; the customer sees the change', async ({ page }) => {
     const { ctx: buyer } = await registerViaApi();
-    const p = (await (await buyer.get('/api/products')).json()).products.find((x: any) => !x.shades);
-    const placed = await (await buyer.post('/api/orders', { data: { items: [{ productId: p.id, quantity: 1 }], shippingAddress: addressBody, shippingMethod: 'Standard' } })).json();
+    const products = (await (await buyer.get('/api/products')).json()).products;
+    const p = products.find((x: any) => x.id === 'sol-de-janeiro-bum-bum' && (x.stockLeft ?? 0) > 0);
+    expect(p).toBeDefined();
+    const placedResponse = await buyer.post('/api/orders', {
+      data: { items: [{ productId: p.id, quantity: 1 }], shippingAddress: addressBody, shippingMethod: 'Standard' },
+    });
+    expect(placedResponse.status(), JSON.stringify(await placedResponse.json())).toBe(201);
+    const placed = await placedResponse.json();
 
     await page.goto('/');
     await page.getByRole('button', { name: 'Sign In' }).first().click();
