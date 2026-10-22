@@ -70,6 +70,7 @@ jobs:
           test -f .visual-evidence/VISUAL-TEST-WALKTHROUGH.md
           test -f .visual-evidence/visuals/manifest.json
           mkdir -p docs/testing/visuals
+          rm -f docs/testing/visuals/*.png
           cp .visual-evidence/VISUAL-TEST-WALKTHROUGH.md docs/testing/VISUAL-TEST-WALKTHROUGH.md
           cp .visual-evidence/visuals/*.png docs/testing/visuals/
           cp .visual-evidence/visuals/manifest.json docs/testing/visuals/manifest.json
