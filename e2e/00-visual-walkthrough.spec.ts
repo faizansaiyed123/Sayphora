@@ -1201,7 +1201,7 @@ test.describe('curated visual evidence', () => {
     await expect(promoCard.getByText('Active', { exact: true })).toBeVisible();
     await promoCard.locator('button').first().click();
     await expect(page.getByText('Promotion Removed')).toBeVisible();
-    await expect(promoText).toHaveCount(0);
+    await expect(promoCard).toHaveCount(0);
   });
 
 });
