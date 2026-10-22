@@ -64,8 +64,7 @@ let emailCounter = 0;
 
 function uniqueEmail(): string {
   emailCounter += 1;
-  const reservedAddresses = ['olivia.bennett@example.com', 'charlotte.hughes@example.com'];
-  return reservedAddresses[emailCounter - 1] || 'customer' + emailCounter + '@example.com';
+  return 'e2e-' + Date.now().toString(36) + '-' + emailCounter + '@example.com';
 }
 
 function escapeHtml(value: string): string {
@@ -445,6 +444,9 @@ test.describe('curated visual evidence', () => {
     });
     await page.getByRole('button', { name: 'Move to Bag', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Shopping Bag', exact: true })).toBeVisible();
+    await expect(page.getByText("Pro Filt'r Soft Matte Longwear Liquid Foundation").last()).toBeVisible();
+    await page.locator('button[title="Share Wishlist"]').locator('xpath=following-sibling::button').click();
+    await expect(page.getByRole('heading', { name: /My Saved Wishlist/ })).toHaveCount(0);
     await page.getByRole('button', { name: 'Close bag' }).click();
 
     const firstCompare = page.locator('button[title="Compare formula"]').first();
