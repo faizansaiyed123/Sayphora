@@ -29,3 +29,7 @@ Tests run against disposable PostgreSQL databases and the seeded catalog, prices
 1. Confirm the latest `main` CI run passes all unit/API tests, all Playwright tests, the Docker build, and the visual-publication job.
 2. Review the newly generated walkthrough and manifest; confirm each screenshot is correctly ordered, captioned, readable, and from a successful checkpoint.
 3. Separately verify a deployed environment and any live external credentials/integrations. The app's current payment provider is manual/pay-on-delivery, and live payment settlement, live email delivery, a configured Gemini provider, live map grounding, real carrier tracking, and production-domain HTTPS/cookie behavior are not proven by the isolated CI test run.
+
+## Documentation follow-up
+
+- `README.md` still says the Docker/Compose files were not built in the build environment. The CI workflow now contains a Docker image build job, and that job passed on earlier CI run [#39637423559](https://github.com/faizansaiyed123/Sayphora/actions/runs/39637423559). Once the latest expanded run is green, reconcile that README sentence with the actual evidence. Do not claim that a full Docker Compose deployment or live production startup was tested unless that separate check is performed.
