@@ -26,7 +26,7 @@ The storefront is the starting point for the customer journey. Product listings 
 
 <table>
 <tr>
-<td width="50%" valign="top">
+<td width="100%" valign="top">
 <p align="center"><strong>THE STORE</strong></p>
 <a href="screenshots/01-storefront-catalogue.png"><img src="screenshots/01-storefront-catalogue.png" alt="Storefront catalogue" width="100%" /></a>
 <p><strong>Storefront catalogue</strong><br/>The main storefront brings the beauty catalogue, product cards, prices and shopping entry points together.<br/><sub>Desktop view · <a href="screenshots/01-storefront-catalogue.png">View full-size image</a></sub></p>
