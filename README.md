@@ -4,6 +4,14 @@ A full-stack storefront: **React 19 + Vite + Tailwind 4** frontend, **Express 4 
 Everything the UI shows is backed by the API and database: accounts, catalogue, cart pricing, orders, stock, reviews,
 wishlist, loyalty tiers & rewards, promo codes, AI beauty tools, admin console and analytics.
 
+## Key features
+
+- **Product discovery:** Catalogue search, filters, sorting, product details, and product comparison.
+- **Accounts and shopping:** Registration, login, saved addresses, wishlists, cart management, promotions, checkout, order tracking, and cancellation.
+- **Beauty tools:** Shade matching, skincare routines, beauty guidance, ingredient diagnostics, virtual try-on, and boutique lookup.
+- **Loyalty and operations:** Rewards, product reviews, inventory management, order fulfilment, promotion management, and administrative analytics.
+- **Progressive web app:** Installation guidance, offline catalogue caching, and network-status feedback.
+
 ## Product walkthrough
 
 **[Explore the Sayphora product walkthrough →](docs/project-walkthrough/README.md)**
@@ -11,12 +19,19 @@ wishlist, loyalty tiers & rewards, promo codes, AI beauty tools, admin console a
 Take a visual tour of the storefront, product discovery, beauty tools, shopping and checkout, customer accounts, loyalty, mobile experience, and staff operations. The walkthrough follows real application journeys and explains how the frontend, API, and PostgreSQL data work together.
 
 
-```
-shared/commerce.ts      pricing, tiers, order-status rules — used by BOTH server (authoritative) and storefront (display)
-server/                 Express API (routes/, services/, middleware/, db/ migrations + seed, cli.ts)
-src/                    React storefront (context/AppContext.tsx talks to the API via src/lib/api.ts)
-tests/                  Vitest: unit tests + API integration tests against real PostgreSQL
-e2e/                    Playwright: browser tests against the production build
+```text
+docs/                  Product and testing walkthroughs and screenshots
+e2e/                   Playwright browser tests
+public/                Static application assets
+shared/commerce.ts     Shared pricing, loyalty, and order-status rules
+server/                Express API, routes, services, and database code
+  db/migrations/       SQL database migrations
+  middleware/          Authentication and request protections
+  routes/              API route modules
+  seed/                Catalogue and boutique seed data
+src/                   React storefront
+tests/api/             API integration tests
+tests/unit/            Unit tests
 ```
 
 ## Quick start (local development)
@@ -27,13 +42,14 @@ Requirements: **Node 22+** and **PostgreSQL 14+** (or Docker, see below).
 cp .env.example .env                      # set DATABASE_URL and JWT_SECRET (>= 32 chars)
 createdb sayphora_db                      # or: docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=sayphora_db postgres:16-alpine
 npm install
-SEED_DEMO=true ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD='ChangeMe!2026xx' npm run db:seed
+# Set ADMIN_EMAIL and ADMIN_PASSWORD in .env before seeding an administrator.
+npm run db:seed
 npm run dev                               # http://localhost:3000  (Vite HMR + API on one port)
 ```
 
-`db:seed` applies migrations, loads the starter catalogue, and (if set) creates the admin. With `SEED_DEMO=true` it also
-adds a demo customer (`demo@sayphora.test` / `DemoPassw0rd!2026`), promo codes (`SAYPHORA20`, `FREESHIP`, `BEAUTY10`,
-`ROUGEVIP`) and sample reviews. **Never use `SEED_DEMO` in production.**
+`db:seed` applies migrations, loads the starter catalogue, and creates an administrator when `ADMIN_EMAIL` and
+`ADMIN_PASSWORD` are configured. When `SEED_DEMO=true`, it also adds a local demo customer, sample promo codes, and
+sample reviews. **Never enable `SEED_DEMO` in production.**
 
 The admin console opens from the **Admin Portal** link (staff accounts only) or **Ctrl/⌘ + Shift + A**.
 
@@ -65,7 +81,7 @@ Migrations: `npm run db:migrate` (or automatic with `RUN_MIGRATIONS_ON_START=tru
 several replicas can start at once). `npm run db:status` lists applied/pending. To add a migration create
 `server/db/migrations/00N_description.sql`; each file runs in its own transaction.
 
-CI/CD: `.github/workflows/ci.yml` runs typecheck, unit + API tests on a Postgres service, Playwright E2E on the
+CI: `.github/workflows/ci.yml` runs typecheck, unit + API tests on a Postgres service, Playwright E2E on the
 production build, and a Docker image build.
 
 ## Testing
@@ -90,6 +106,16 @@ track; admin advances an order; sold-out; staff console hidden from customers; C
 
 See `.env.example` (every variable is documented). Required: `DATABASE_URL`, `JWT_SECRET`. The server validates all
 configuration at startup and exits with a readable message when something is wrong.
+
+### Environment variable names
+
+The following names are documented in `.env.example`; values are intentionally omitted.
+
+- **Database:** `DATABASE_URL`, `DATABASE_POOL_MAX`, `DATABASE_SSL`, `POSTGRES_PASSWORD`
+- **Application:** `NODE_ENV`, `PORT`, `APP_URL`, `RUN_MIGRATIONS_ON_START`, `TRUST_PROXY`, `SESSION_TTL_DAYS`, `COOKIE_SECURE`, `PASSWORD_HASH_COST`, `LOG_LEVEL`, `RATE_LIMIT_DISABLED`
+- **Commerce and seeding:** `TAX_RATE`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `SEED_DEMO`
+- **Session signing:** `JWT_SECRET`
+- **AI and email integrations:** `GEMINI_API_KEY`, `GEMINI_MODEL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SECURE`, `MAIL_FROM`
 
 ## Security model
 
@@ -155,3 +181,12 @@ also suits the stock/promo concurrency requirements. The old `prisma/` folder is
   other fields can be changed through `PUT /api/admin/products/:id`.
 - Starter catalogue, boutique directory, award text and marketing copy (returns policy, "authentic" claims) are **sample content** — replace/confirm before launch.
 - The catalogue API returns up to 500 products per request and the storefront filters client-side; for very large catalogues add server-side pagination in the UI.
+
+## Documentation
+
+- [Product walkthrough](docs/project-walkthrough/README.md)
+- [Testing evidence index](docs/testing/README.md)
+- [End-to-end visual walkthrough](docs/testing/VISUAL-TEST-WALKTHROUGH.md)
+- [Recorded CI test report](docs/testing/TEST-REPORT.md) — a historical report, not a guarantee of current CI status.
+- [CI workflow](.github/workflows/ci.yml)
+- [Environment template](.env.example)
