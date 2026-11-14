@@ -17,7 +17,7 @@ export function cookieOptions(deps: Pick<AppDeps, 'config'>): CookieOptions {
 interface UserRow {
   id: string; email: string; name: string; role: AuthUser['role']; tier: AuthUser['tier']; points: number;
   lifetime_spend_cents: number; phone: string | null; skin_type: string; skin_tone: string; undertone: string;
-  concerns: string[]; favorite_brands: string[]; token_version: number;
+  concerns: string[]; favorite_brands: string[]; token_version: number; is_demo: boolean; demo_expires_at: Date | null;
 }
 
 export const USER_COLUMNS = `id, email, name, role, tier, points, lifetime_spend_cents, phone, skin_type, skin_tone,
