@@ -658,7 +658,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const endDemoSession = async () => {
     if (!user?.isDemo) return;
-    try { await api('/demo/session', { method: 'DELETE' }); } finally {
+    try {
+      await api('/demo/session', { method: 'DELETE' });
       setUser(null);
       setDemoExpiresAt(null);
       setOrders([]);
@@ -666,6 +667,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setRewards([]);
       setRedemptions([]);
       addToast('Demo ended', 'Your temporary customer data was deleted.', 'info');
+    } catch (err) {
+      if (err instanceof ApiError && (err.status === 401 || err.status === 404)) {
+        setUser(null);
+        setDemoExpiresAt(null);
+        setOrders([]);
+        setRewards([]);
+        setRedemptions([]);
+        addToast('Demo expired', 'The temporary workspace is no longer active.', 'info');
+        return;
+      }
+      fail(err, 'Demo still active');
     }
   };
 
