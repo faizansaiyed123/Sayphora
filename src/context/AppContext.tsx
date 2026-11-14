@@ -263,7 +263,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const refreshUser = useCallback(async () => {
     const { user: u } = await api<{ user: User | null }>('/auth/me');
     setUser(u);
-    setDemoExpiresAt(u.isDemo ? (u.demoExpiresAt ?? null) : null);
+    setDemoExpiresAt(u?.isDemo ? (u.demoExpiresAt ?? null) : null);
     return u;
   }, []);
 
