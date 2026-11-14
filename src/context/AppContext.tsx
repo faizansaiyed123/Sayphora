@@ -30,6 +30,7 @@ export interface AppContextType {
   selectedSamples: FreeSample[];
   user: User | null;
   authLoading: boolean;
+  demoExpiresAt: string | null;
   orders: Order[];
   filters: FilterState;
   pricingRules: PricingRules;
@@ -162,6 +163,8 @@ export interface AppContextType {
   // Auth & profile
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  startDemoSession: () => Promise<void>;
+  endDemoSession: () => Promise<void>;
   logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<string>;
   resetPassword: (token: string, password: string) => Promise<void>;
@@ -247,6 +250,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // ------------------------------------------------------------ auth ----
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [demoExpiresAt, setDemoExpiresAt] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [wishlist, setWishlist] = useState<string[]>(() => readStorage<string[]>('sayphora_wishlist', []));
   const [rewards, setRewards] = useState<Reward[]>([]);
@@ -259,12 +263,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const refreshUser = useCallback(async () => {
     const { user: u } = await api<{ user: User | null }>('/auth/me');
     setUser(u);
+    setDemoExpiresAt(u?.isDemo ? (u.demoExpiresAt ?? null) : null);
     return u;
   }, []);
 
   /** After sign-in/up: fold the guest wishlist into the account and load account data. */
   const hydrateAccount = useCallback(async (u: User) => {
     setUser(u);
+    setDemoExpiresAt(u.isDemo ? (u.demoExpiresAt ?? null) : null);
     try {
       const guest = readStorage<string[]>('sayphora_wishlist', []);
       const { productIds } = await api<{ productIds: string[] }>('/me/wishlist/merge', { body: { productIds: guest } });
@@ -635,6 +641,46 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // ------------------------------------------------------- auth actions ----
+  const startDemoSession = async () => {
+    const { user: u, expiresAt } = await api<{ user: User; expiresAt: string }>('/demo/session', { method: 'POST', body: {} });
+    setUser(u);
+    setDemoExpiresAt(expiresAt);
+    setAuthLoading(false);
+    setIsAuthModalOpen(false);
+    try {
+      const guest = readStorage<string[]>('sayphora_wishlist', []);
+      const { productIds } = await api<{ productIds: string[] }>('/me/wishlist/merge', { body: { productIds: guest } });
+      setWishlist(productIds);
+    } catch { /* anonymous demo wishlist sync is best-effort */ }
+    await refreshOrders();
+    addToast('Recruiter demo ready', 'You are using a temporary synthetic customer workspace.', 'success');
+  };
+
+  const endDemoSession = async () => {
+    if (!user?.isDemo) return;
+    try {
+      await api('/demo/session', { method: 'DELETE' });
+      setUser(null);
+      setDemoExpiresAt(null);
+      setOrders([]);
+      setWishlist(readStorage<string[]>('sayphora_wishlist', []));
+      setRewards([]);
+      setRedemptions([]);
+      addToast('Demo ended', 'Your temporary customer data was deleted.', 'info');
+    } catch (err) {
+      if (err instanceof ApiError && (err.status === 401 || err.status === 404)) {
+        setUser(null);
+        setDemoExpiresAt(null);
+        setOrders([]);
+        setRewards([]);
+        setRedemptions([]);
+        addToast('Demo expired', 'The temporary workspace is no longer active.', 'info');
+        return;
+      }
+      fail(err, 'Demo still active');
+    }
+  };
+
   const login = async (email: string, password: string) => {
     const { user: u } = await api<{ user: User }>('/auth/login', { body: { email, password } });
     await hydrateAccount(u);
@@ -648,8 +694,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addToast('Welcome to Sayphora', 'Account created! 50 Welcome points awarded.', 'success');
   };
   const logout = async () => {
+    if (user?.isDemo) { await endDemoSession(); return; }
     try { await api('/auth/logout', { method: 'POST', body: {} }); } catch { /* cookie may already be gone */ }
-    setUser(null); setOrders([]); setWishlist(readStorage<string[]>('sayphora_wishlist', []));
+    setUser(null); setDemoExpiresAt(null); setOrders([]); setWishlist(readStorage<string[]>('sayphora_wishlist', []));
     setIsAdminOpenRaw(false); setAdminOrders([]); setAdminProducts([]); setPromos([]); setAdminReviews([]);
     setRewards([]); setRedemptions([]);
     addToast('Signed Out', 'You have been safely signed out.', 'info');
@@ -800,7 +847,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const value: AppContextType = {
     products, filteredProducts, productsLoading, productsError, reloadProducts, samples, cart, wishlist, appliedPromo, selectedSamples,
-    user, authLoading, orders, filters, pricingRules, paymentProvider, computeCartPricing,
+    user, authLoading, demoExpiresAt, orders, filters, pricingRules, paymentProvider, computeCartPricing,
     currency, setCurrency, formatPrice,
     quickViewProduct, isCartOpen, isWishlistOpen, isCheckoutOpen, isAuthModalOpen, authMode, resetToken, isBeautyInsiderOpen,
     isAIStudioOpen, aiStudioTab, isOrderTrackingOpen, trackedOrderNumber,
@@ -817,7 +864,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     reviews, reviewsLoading, loadReviews, getProductReviews, addReview, voteReview, deleteReview,
     addToCart, removeFromCart, updateQuantity, clearCart, applyPromo, removePromo, toggleSample, createOrder, cancelOrder, refreshOrders,
     toggleWishlist, isInWishlist, moveAllWishlistToBag, setCategory, setSearchQuery, setFilters, resetFilters,
-    login, register, logout, forgotPassword, resetPassword, updateBeautyProfile, saveAddress, deleteAddress, rewards, redemptions, loadRewards, redeemReward
+    login, register, startDemoSession, endDemoSession, logout, forgotPassword, resetPassword, updateBeautyProfile, saveAddress, deleteAddress, rewards, redemptions, loadRewards, redeemReward
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

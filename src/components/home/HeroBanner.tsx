@@ -21,7 +21,7 @@ interface HeroSlide {
 }
 
 export const HeroBanner: React.FC = () => {
-  const { openAIStudio, setCategory, setSearchQuery } = useApp();
+  const { openAIStudio, setCategory, setSearchQuery, user, startDemoSession } = useApp();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -175,6 +175,18 @@ export const HeroBanner: React.FC = () => {
           </p>
 
           {/* Action Buttons */}
+          {!user && (
+            <button
+              type="button"
+              onClick={() => { void startDemoSession(); }}
+              className="px-6 py-3.5 bg-white text-stone-950 hover:bg-amber-50 rounded-full text-xs font-bold tracking-wide flex items-center gap-2 shadow-lg transition-all hover:scale-[1.02] cursor-pointer border border-white"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-700" />
+              <span>Explore Sayphora — no account</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          )}
+
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <button
               onClick={activeSlide.primaryAction.action}
