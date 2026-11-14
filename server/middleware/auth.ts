@@ -21,13 +21,14 @@ interface UserRow {
 }
 
 export const USER_COLUMNS = `id, email, name, role, tier, points, lifetime_spend_cents, phone, skin_type, skin_tone,
-  undertone, concerns, favorite_brands, token_version`;
+  undertone, concerns, favorite_brands, token_version, is_demo, demo_expires_at`;
 
 export function rowToAuthUser(r: UserRow): AuthUser {
   return {
     id: r.id, email: r.email, name: r.name, role: r.role, tier: r.tier, points: r.points,
     lifetimeSpendCents: r.lifetime_spend_cents, phone: r.phone, skinType: r.skin_type, skinTone: r.skin_tone,
-    undertone: r.undertone, concerns: r.concerns, favoriteBrands: r.favorite_brands, tokenVersion: r.token_version
+    undertone: r.undertone, concerns: r.concerns, favoriteBrands: r.favorite_brands, tokenVersion: r.token_version,
+    isDemo: r.is_demo, demoExpiresAt: r.demo_expires_at ? r.demo_expires_at.toISOString() : null
   };
 }
 
@@ -42,7 +43,11 @@ export function sessionMiddleware(deps: AppDeps): RequestHandler {
           const { rows } = await deps.db.query<UserRow>(`SELECT ${USER_COLUMNS} FROM users WHERE id = $1`, [claims.userId]);
           const row = rows[0];
           // token_version lets us invalidate every session on password change/reset
-          if (row && row.token_version === claims.tokenVersion) req.user = rowToAuthUser(row);
+          if (
+            row &&
+            row.token_version === claims.tokenVersion &&
+            (!row.is_demo || (row.demo_expires_at && row.demo_expires_at.getTime() > Date.now()))
+          ) req.user = rowToAuthUser(row);
         }
       }
       next();
