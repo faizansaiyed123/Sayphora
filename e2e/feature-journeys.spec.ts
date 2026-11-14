@@ -1,6 +1,19 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('additional customer feature journeys', () => {
+  test('recruiter demo opens a temporary real customer workspace without signup', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Explore Sayphora — no account' }).click();
+
+    await expect(page.getByText('Recruiter demo · temporary synthetic customer workspace')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'End demo & delete data' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Beauty Insider \(480 pts\)/ })).toBeVisible();
+
+    await page.getByRole('button', { name: 'End demo & delete data' }).click();
+    await expect(page.getByText('Recruiter demo · temporary synthetic customer workspace')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Explore Sayphora — no account' })).toBeVisible();
+  });
+
   test('catalogue search opens the matching product detail', async ({ page }) => {
     await page.goto('/');
 
