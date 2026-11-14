@@ -204,6 +204,8 @@ export interface User {
   beautyProfile: UserBeautyProfile;
   phone?: string;
   savedAddresses: Array<Address & { id?: string }>;
+  isDemo: boolean;
+  demoExpiresAt?: string;
 }
 
 export interface FilterState {
