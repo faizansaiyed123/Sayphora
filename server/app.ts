@@ -14,7 +14,6 @@ import { ordersRouter } from './routes/orders';
 import { reviewsRouter } from './routes/reviews';
 import { adminRouter } from './routes/admin';
 import { aiRouter } from './routes/ai';
-import { demoRouter } from './routes/demo';
 
 function trustProxy(v: string): boolean | number | string {
   if (v === 'true') return true;
@@ -55,7 +54,7 @@ export function createApp(deps: AppDeps): Express {
   app.use('/api', limiters.api, originCheck(config), sessionMiddleware(deps));
   // API responses can be user-specific and must never be stored by shared caches.
   app.use('/api', (_req, res, next) => { res.setHeader('Cache-Control', 'no-store'); next(); });
-  app.use('/api', authRouter(deps, limiters), demoRouter(deps, limiters), catalogRouter(deps, limiters), ordersRouter(deps, limiters),
+  app.use('/api', authRouter(deps, limiters), catalogRouter(deps, limiters), ordersRouter(deps, limiters),
     reviewsRouter(deps, limiters), adminRouter(deps, limiters), aiRouter(deps, limiters));
   app.use('/api', notFoundHandler);
   app.use(errorHandler(logger));

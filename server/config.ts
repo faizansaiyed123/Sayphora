@@ -46,8 +46,7 @@ const envSchema = z.object({
 
   ADMIN_EMAIL: optionalString,
   ADMIN_PASSWORD: optionalString,
-  SEED_DEMO: bool(false),
-  DEMO_SESSION_TTL_MINUTES: z.coerce.number().int().min(15).max(720).default(120)
+  SEED_DEMO: bool(false)
 });
 
 export type Config = Omit<z.infer<typeof envSchema>, 'COOKIE_SECURE'> & {

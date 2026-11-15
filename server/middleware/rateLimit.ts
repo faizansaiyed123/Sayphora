@@ -8,7 +8,6 @@ export interface Limiters {
   login: ReturnType<typeof rateLimit>;
   ai: ReturnType<typeof rateLimit>;
   write: ReturnType<typeof rateLimit>;
-  demo: ReturnType<typeof rateLimit>;
 }
 
 export function createLimiters(config: Pick<Config, 'RATE_LIMIT_DISABLED'>): Limiters {
@@ -32,7 +31,6 @@ export function createLimiters(config: Pick<Config, 'RATE_LIMIT_DISABLED'>): Lim
     // brute-force protection: per (ip, email) pair
     login: make({ windowMs: 15 * 60_000, limit: 10, keyGenerator: emailKey, skipSuccessfulRequests: true }),
     ai: make({ windowMs: 60_000, limit: 20 }),
-    write: make({ windowMs: 60_000, limit: 60 }),
-    demo: make({ windowMs: 60 * 60_000, limit: 4 })
+    write: make({ windowMs: 60_000, limit: 60 })
   };
 }

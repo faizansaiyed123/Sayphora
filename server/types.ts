@@ -21,8 +21,6 @@ export interface AuthUser {
   concerns: string[];
   favoriteBrands: string[];
   tokenVersion: number;
-  isDemo: boolean;
-  demoExpiresAt: string | null;
 }
 
 export interface AppDeps {

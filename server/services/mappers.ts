@@ -68,8 +68,6 @@ export function toUser(u: AuthUser, addresses: AddressRow[], pointsToNextTier: n
     points: u.points,
     pointsToNextTier,
     phone: u.phone ?? undefined,
-    isDemo: u.isDemo,
-    demoExpiresAt: u.demoExpiresAt ?? undefined,
     beautyProfile: {
       skinType: u.skinType,
       skinTone: u.skinTone,

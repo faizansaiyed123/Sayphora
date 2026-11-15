@@ -46,9 +46,7 @@ export const Navbar: React.FC = () => {
     isStaff,
     openStoreLocator,
     selectedBoutique,
-    logout,
-    demoExpiresAt,
-    endDemoSession
+    logout
   } = useApp();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -128,27 +126,6 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-stone-200">
-      {user?.isDemo && (
-        <div className="bg-amber-50 border-b border-amber-200 text-stone-800 px-4 py-2">
-          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-[11px]">
-            <span className="font-semibold">Recruiter demo · temporary synthetic customer workspace</span>
-            <div className="flex items-center gap-3">
-              {demoExpiresAt && (
-                <span className="text-stone-500">
-                  Expires {new Date(demoExpiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              )}
-              <button
-                type="button"
-                onClick={() => { void endDemoSession(); }}
-                className="font-semibold text-stone-900 underline underline-offset-2 hover:text-amber-800"
-              >
-                End demo & delete data
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       {/* Top Announcement & Currency Bar */}
       <div className="bg-stone-900 text-stone-200 text-xs py-2 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">

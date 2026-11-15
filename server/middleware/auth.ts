@@ -17,18 +17,17 @@ export function cookieOptions(deps: Pick<AppDeps, 'config'>): CookieOptions {
 interface UserRow {
   id: string; email: string; name: string; role: AuthUser['role']; tier: AuthUser['tier']; points: number;
   lifetime_spend_cents: number; phone: string | null; skin_type: string; skin_tone: string; undertone: string;
-  concerns: string[]; favorite_brands: string[]; token_version: number; is_demo: boolean; demo_expires_at: Date | null;
+  concerns: string[]; favorite_brands: string[]; token_version: number;
 }
 
 export const USER_COLUMNS = `id, email, name, role, tier, points, lifetime_spend_cents, phone, skin_type, skin_tone,
-  undertone, concerns, favorite_brands, token_version, is_demo, demo_expires_at`;
+  undertone, concerns, favorite_brands, token_version`;
 
 export function rowToAuthUser(r: UserRow): AuthUser {
   return {
     id: r.id, email: r.email, name: r.name, role: r.role, tier: r.tier, points: r.points,
     lifetimeSpendCents: r.lifetime_spend_cents, phone: r.phone, skinType: r.skin_type, skinTone: r.skin_tone,
-    undertone: r.undertone, concerns: r.concerns, favoriteBrands: r.favorite_brands, tokenVersion: r.token_version,
-    isDemo: r.is_demo, demoExpiresAt: r.demo_expires_at ? r.demo_expires_at.toISOString() : null
+    undertone: r.undertone, concerns: r.concerns, favoriteBrands: r.favorite_brands, tokenVersion: r.token_version
   };
 }
 
@@ -43,11 +42,7 @@ export function sessionMiddleware(deps: AppDeps): RequestHandler {
           const { rows } = await deps.db.query<UserRow>(`SELECT ${USER_COLUMNS} FROM users WHERE id = $1`, [claims.userId]);
           const row = rows[0];
           // token_version lets us invalidate every session on password change/reset
-          if (
-            row &&
-            row.token_version === claims.tokenVersion &&
-            (!row.is_demo || (row.demo_expires_at && row.demo_expires_at.getTime() > Date.now()))
-          ) req.user = rowToAuthUser(row);
+          if (row && row.token_version === claims.tokenVersion) req.user = rowToAuthUser(row);
         }
       }
       next();
