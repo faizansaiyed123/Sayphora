@@ -148,11 +148,16 @@ const MainCatalog: React.FC = () => {
 export default function App() {
   return (
     <AppProvider>
-      <div className="flex flex-col min-h-screen text-stone-900 selection:bg-amber-200 selection:text-stone-950">
+      <div className="min-h-screen text-stone-900">
+        <div className="bg-stone-950 text-white px-4 py-2 text-[10px] sm:text-[11px] text-center tracking-[0.12em] uppercase">
+          Sayphora recruiter demo · Browser simulation · Sample data only · Production API path remains disabled on this branch
+        </div>
+        <div className="flex flex-col min-h-[calc(100vh-33px)] selection:bg-amber-200 selection:text-stone-950">
         <OfflineBanner />
         <Navbar />
         <MainCatalog />
         <Footer />
+        </div>
       </div>
     </AppProvider>
   );

@@ -1,192 +1,60 @@
-# Sayphora — Luxury Beauty, Skincare & Cosmetics
+# Sayphora — Recruiter Demo
 
-A full-stack storefront: **React 19 + Vite + Tailwind 4** frontend, **Express 4 (TypeScript)** API, **PostgreSQL 16** database.
-Everything the UI shows is backed by the API and database: accounts, catalogue, cart pricing, orders, stock, reviews,
-wishlist, loyalty tiers & rewards, promo codes, AI beauty tools, admin console and analytics.
+The \`demo\` branch is an isolated, database-free demonstration of the Sayphora luxury beauty commerce application. The production-oriented \`main\` branch remains unchanged.
 
-## Key features
+## Start
 
-- **Product discovery:** Catalogue search, filters, sorting, product details, and product comparison.
-- **Accounts and shopping:** Registration, login, saved addresses, wishlists, cart management, promotions, checkout, order tracking, and cancellation.
-- **Beauty tools:** Shade matching, skincare routines, beauty guidance, ingredient diagnostics, virtual try-on, and boutique lookup.
-- **Loyalty and operations:** Rewards, product reviews, inventory management, order fulfilment, promotion management, and administrative analytics.
-- **Progressive web app:** Installation guidance, offline catalogue caching, and network-status feedback.
+\`\`\`bash
+npm ci
+npm run dev
+\`\`\`
 
-## Product walkthrough
+Open the Vite URL and use **Sign In → Fill demo sign-in**.
 
-**[Explore the Sayphora product walkthrough →](docs/project-walkthrough/README.md)**
+### Demo access
 
-Take a visual tour of the storefront, product discovery, beauty tools, shopping and checkout, customer accounts, loyalty, mobile experience, and staff operations. The walkthrough follows real application journeys and explains how the frontend, API, and PostgreSQL data work together.
+- Email: \`demo@sayphora.demo\`
+- Password: \`SayphoraDemo2026!\`
+- Role: Admin / Rouge workspace
 
+The demo uses the real Sayphora catalogue and review seed data from the repository, but all account, commerce, admin, AI and boutique interactions are handled by the browser simulator.
 
-```text
-docs/                  Product and testing walkthroughs and screenshots
-e2e/                   Playwright browser tests
-public/                Static application assets
-shared/commerce.ts     Shared pricing, loyalty, and order-status rules
-server/                Express API, routes, services, and database code
-  db/migrations/       SQL database migrations
-  middleware/          Authentication and request protections
-  routes/              API route modules
-  seed/                Catalogue and boutique seed data
-src/                   React storefront
-tests/api/             API integration tests
-tests/unit/            Unit tests
-```
+## Demonstration flows
 
-## Quick start (local development)
+Catalogue: product search, category filters, quick views, shades, ingredient diagnostics, comparison and virtual try-on.
 
-Requirements: **Node 22+** and **PostgreSQL 14+** (or Docker, see below).
+Commerce: seeded sign-in, wishlist, shopping bag, promo validation, checkout, generated order, order tracking and cancellation.
 
-```bash
-cp .env.example .env                      # set DATABASE_URL and JWT_SECRET (>= 32 chars)
-createdb sayphora_db                      # or: docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=sayphora_db postgres:16-alpine
-npm install
-# Set ADMIN_EMAIL and ADMIN_PASSWORD in .env before seeding an administrator.
-npm run db:seed
-npm run dev                               # http://localhost:3000  (Vite HMR + API on one port)
-```
+Customer experience: beauty profile, saved address, rewards redemption, review creation and helpful/unhelpful voting.
 
-`db:seed` applies migrations, loads the starter catalogue, and creates an administrator when `ADMIN_EMAIL` and
-`ADMIN_PASSWORD` are configured. When `SEED_DEMO=true`, it also adds a local demo customer, sample promo codes, and
-sample reviews. **Never enable `SEED_DEMO` in production.**
+Beauty intelligence: shade matching, skincare routine guidance, beauty consultant responses and boutique directory.
 
-The admin console opens from the **Admin Portal** link (staff accounts only) or **Ctrl/⌘ + Shift + A**.
+Operations: admin portal, catalogue editing, inventory adjustments, order-status changes, review moderation, analytics and promo management.
 
-## Run with Docker (production-style)
+## Data behavior
 
-```bash
-cp .env.example .env
-#   set: POSTGRES_PASSWORD (hex), JWT_SECRET, APP_URL, ADMIN_EMAIL, ADMIN_PASSWORD
-#   for plain-http local testing also set COOKIE_SECURE=false
-docker compose up -d --build              # db + app; migrations run automatically on boot
-docker compose run --rm app node dist-server/cli.js seed   # starter catalogue + admin account
-open http://localhost:3000
-```
+The simulator stores its state in \`localStorage\` and the active session in \`sessionStorage\`. Use a private browser session or remove the \`sayphora_demo_state_v1\` key to reset the demo.
 
-Data lives in the `pgdata` volume. Health: `GET /health` (200 when the database answers, else 503) — used by the Docker
-healthchecks. Backups: `docker compose exec db pg_dump -U sayphora sayphora > backup.sql`.
+The demo does **not**:
 
-## Deploying to production
+- connect to PostgreSQL;
+- send email;
+- charge payments;
+- call Gemini or Google Maps;
+- use production secrets;
+- execute database migrations.
 
-1. Provision PostgreSQL (managed is best) and set `DATABASE_URL` (add `DATABASE_SSL=true` if your provider requires TLS).
-2. Put the app behind **HTTPS** (Caddy, nginx, Traefik, or your PaaS router). Set `APP_URL=https://your-domain`,
-   `TRUST_PROXY=1` (so rate limiting sees real client IPs) and keep `COOKIE_SECURE` at its production default (`true`).
-3. Set a strong `JWT_SECRET` (`openssl rand -base64 48`). The server refuses to start in production with a placeholder.
-4. Build & run: `docker compose up -d --build` — or without Docker: `npm ci && npm run build && npm start`.
-5. Create the first admin: `docker compose run --rm app node dist-server/cli.js create-admin you@domain.com 'LongPassword!' "Your Name"`.
-6. Configure SMTP (order/reset emails) and, optionally, `GEMINI_API_KEY`.
+AI and boutique features return deterministic demonstration responses so a recruiter can evaluate the UX without third-party credentials or network-dependent integrations.
 
-Migrations: `npm run db:migrate` (or automatic with `RUN_MIGRATIONS_ON_START=true`; guarded by a PostgreSQL advisory lock so
-several replicas can start at once). `npm run db:status` lists applied/pending. To add a migration create
-`server/db/migrations/00N_description.sql`; each file runs in its own transaction.
+## Switch back to the real stack
 
-CI: `.github/workflows/ci.yml` runs typecheck, unit + API tests on a Postgres service, Playwright E2E on the
-production build, and a Docker image build.
+Set \`VITE_DEMO_MODE=false\` before starting Vite. The existing \`/api\` Express/PostgreSQL integration remains in the codebase and is used when demo mode is disabled.
 
-## Testing
+## Validation
 
-```bash
+\`\`\`bash
 npm run typecheck
-npm test                 # unit + API integration tests (needs PostgreSQL; uses database "sayphora_test")
-npm run test:e2e         # builds the app, boots it on :4010 with database "sayphora_e2e", drives Chromium
-```
-Test databases default to `postgresql://postgres:postgres@localhost:5432/{sayphora_test,sayphora_e2e}`; create them first
-and override with `TEST_DATABASE_URL` / `E2E_DATABASE_URL`. First-time E2E: `npx playwright install chromium`.
+npm run build
+\`\`\`
 
-What is covered: pricing/tier/status rules; password hashing and JWT tampering; config validation; registration, login,
-sessions, password change/reset, CSRF origin check, RBAC, login rate limiting; catalogue filters/search (incl. LIKE-injection);
-admin CRUD; order placement (server-side pricing, stock decrement, idempotency, **concurrent checkouts never oversell**,
-single-use promo codes can't be double-spent), cancellation/restock/points reversal, fulfilment lifecycle, analytics;
-reviews (verified purchase, votes, aggregates); wishlist/addresses/rewards; AI endpoints (fake Gemini, malformed output,
-prompt-injection attempts); migrations and DB constraints; and browser journeys (register → shop → promo → checkout →
-track; admin advances an order; sold-out; staff console hidden from customers; CSP/console clean).
-
-## Configuration
-
-See `.env.example` (every variable is documented). Required: `DATABASE_URL`, `JWT_SECRET`. The server validates all
-configuration at startup and exits with a readable message when something is wrong.
-
-### Environment variable names
-
-The following names are documented in `.env.example`; values are intentionally omitted.
-
-- **Database:** `DATABASE_URL`, `DATABASE_POOL_MAX`, `DATABASE_SSL`, `POSTGRES_PASSWORD`
-- **Application:** `NODE_ENV`, `PORT`, `APP_URL`, `RUN_MIGRATIONS_ON_START`, `TRUST_PROXY`, `SESSION_TTL_DAYS`, `COOKIE_SECURE`, `PASSWORD_HASH_COST`, `LOG_LEVEL`, `RATE_LIMIT_DISABLED`
-- **Commerce and seeding:** `TAX_RATE`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `SEED_DEMO`
-- **Session signing:** `JWT_SECRET`
-- **AI and email integrations:** `GEMINI_API_KEY`, `GEMINI_MODEL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SECURE`, `MAIL_FROM`
-
-## Security model
-
-- Passwords: scrypt (N=2^15) with per-user salt; login is timing-uniform for unknown emails; per-account+IP brute-force limiter.
-- Sessions: HS256 JWT in an `HttpOnly`, `SameSite=Lax`, `Secure` (prod) cookie; `token_version` revokes all sessions on password change/reset.
-- CSRF: SameSite + `Origin` check on every state-changing API call. Strict CSP, HSTS (over HTTPS), `nosniff`, Permissions-Policy.
-- Authorization: `Customer` / `Staff` (orders, reviews, stock, analytics) / `Admin` (catalogue, promos, system). Customers only ever see their own orders.
-- The server never trusts client prices/totals; every order is re-priced from the database inside a transaction with row locks.
-- Input validated with zod everywhere; SQL is parameterised; rate limits on the API, auth, writes and AI endpoints; request-size limits.
-- Secrets only via environment variables; logs redact cookies/authorization.
-
-## API overview
-
-All under `/api` (JSON). Auth: `POST /auth/register|login|logout|forgot-password|reset-password`, `GET /auth/me`.
-Account: `PATCH /me`, `POST /me/password`, `/me/addresses`, `/me/wishlist`, `GET /me/orders`, `/me/rewards`.
-Catalogue: `GET /products`, `/products/:id`, `/products/:id/reviews`, `/samples`, `/boutiques`, `/config`.
-Commerce: `POST /promos/validate`, `POST /orders` (send `Idempotency-Key`), `GET /orders/:id`, `POST /orders/:id/cancel`,
-`POST /products/:id/reviews`, `POST /reviews/:id/vote`.
-AI: `POST /ai/shade-match|skincare-routine|beauty-consultant|store-locator`.
-Staff/Admin: `/admin/products|orders|promos|reviews|analytics|system`.
-Errors are `{ "error": { "code", "message", "details?" } }`.
-
-## Troubleshooting
-
-| Symptom | Fix |
-|---|---|
-| `Invalid environment configuration` on start | Read the listed variables; compare with `.env.example`. |
-| `ECONNREFUSED :5432` | PostgreSQL isn't running / wrong `DATABASE_URL`. |
-| Can't sign in on a plain-http deployment | Cookies are `Secure` in production. Use HTTPS, or `COOKIE_SECURE=false` for local testing only. |
-| `Cross-origin request blocked` | Set `APP_URL` to the exact public origin (scheme + host). |
-| Everyone gets rate-limited | Behind a proxy? set `TRUST_PROXY=1`. |
-| Frontend shows "couldn't load the collection" | API unreachable or DB empty → run `db:seed`; check `/health`. |
-| Port in use | Change `PORT`. |
-| Windows: `npm start` fails | The script sets `NODE_ENV` POSIX-style; use WSL/Git Bash or set `NODE_ENV=production` yourself. |
-
-## What changed from the original project (summary)
-
-The original was a UI prototype with mock state. Notable fixes: the project did not install (esbuild/Vite peer conflict);
-anyone was the hard-coded **Admin** and every admin endpoint was open; order totals were client-trusted; `/api/download-zip`
-exposed the source and `.env`; Prisma schema couldn't store shades/sizes; `npm start` launched the dev server; the Compose file
-referenced a missing Dockerfile and had no database; two competing service workers; fabricated analytics, AI metrics,
-tracking numbers, "viewing now" counters and review counts; a fake card form claiming PCI compliance. All replaced by real logic.
-
-**Prisma was replaced by `pg` + SQL migrations.** Prisma's engine binaries could not be downloaded in the environment used to
-build this delivery, so Prisma code could not have been verified; plain SQL with explicit transactions and `SELECT … FOR UPDATE`
-also suits the stock/promo concurrency requirements. The old `prisma/` folder is gone; the schema is in `server/db/migrations/`.
-
-## Known limitations (please read)
-
-- **Online card payment is not integrated.** Checkout supports *pay on delivery* (payment marked paid automatically on delivery, or via the staff API
-  `PATCH /api/admin/orders/:id` with `paymentStatus`). Integrating a gateway needs your credentials and a verified provider flow; the `orders` table already has
-  `payment_provider/payment_reference/payment_status` columns for it. Raw card data is never collected.
-- **Tax is a flat configurable rate** (`TAX_RATE`) on all orders, and shipping fees/thresholds are fixed in `shared/commerce.ts`;
-  use a tax service for real multi-jurisdiction compliance. Displayed currencies are *indicative* conversions; all orders are charged in USD.
-- **Gemini and SMTP were not exercised against live services** (no credentials/network in the build environment). The Gemini
-  integration is tested with a fake client (including malformed output and prompt-injection cases) and always falls back to
-  catalogue-grounded rule-based answers; Maps grounding is untested live. Without SMTP, emails are logged, not sent.
-- **Docker/Compose files were not built here** (no Docker daemon in the build environment). The Dockerfile's steps were replayed
-  manually (clean `npm ci`, build, `npm ci --omit=dev`, boot with production settings, migrate, seed, health, login, SIGTERM) and
-  the YAML files parse, but run `docker compose up --build` once to confirm on your host.
-- Review photos accept https URLs only (no image upload storage); product images are URLs (admin enters them).
-- Guests must sign in to check out; there is no guest order tracking. Product edit in the admin UI covers creation, stock and archiving;
-  other fields can be changed through `PUT /api/admin/products/:id`.
-- Starter catalogue, boutique directory, award text and marketing copy (returns policy, "authentic" claims) are **sample content** — replace/confirm before launch.
-- The catalogue API returns up to 500 products per request and the storefront filters client-side; for very large catalogues add server-side pagination in the UI.
-
-## Documentation
-
-- [Product walkthrough](docs/project-walkthrough/README.md)
-- [Testing evidence index](docs/testing/README.md)
-- [End-to-end visual walkthrough](docs/testing/VISUAL-TEST-WALKTHROUGH.md)
-- [Recorded CI test report](docs/testing/TEST-REPORT.md) — a historical report, not a guarantee of current CI status.
-- [CI workflow](.github/workflows/ci.yml)
-- [Environment template](.env.example)
+The demo branch includes a separate read-only GitHub Actions workflow for typechecking and building this branch.

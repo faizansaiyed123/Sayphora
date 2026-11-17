@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, Lock, Mail, User as UserIcon, ArrowRight, ShieldCheck, Loader2, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { ApiError, errorMessage } from '../../lib/api';
+import { ApiError, DEMO_MODE, errorMessage } from '../../lib/api';
 
 const inputCls =
   'w-full text-xs pl-9 pr-3 py-2.5 border rounded-xl bg-stone-50 focus:bg-white focus:outline-none focus:border-stone-900';
@@ -26,6 +26,14 @@ export const AuthModal: React.FC = () => {
   if (!isAuthModalOpen) return null;
 
   const close = () => setIsAuthModalOpen(false);
+
+  const useDemoAccess = () => {
+    setAuthMode('signin');
+    setEmail('demo@sayphora.demo');
+    setPassword('SayphoraDemo2026!');
+    setError(null);
+    setFieldErrors({});
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,6 +98,25 @@ export const AuthModal: React.FC = () => {
         )}
 
         <div className="p-6 space-y-4">
+          {DEMO_MODE && (authMode === 'signin' || authMode === 'signup') && (
+            <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-3.5 space-y-2.5">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-amber-800">Recruiter Demo</p>
+                  <p className="text-xs font-semibold text-stone-900">Use the seeded admin workspace</p>
+                </div>
+                <ShieldCheck className="w-4 h-4 text-amber-700" />
+              </div>
+              <p className="text-[11px] text-stone-600">Sample account only — no PostgreSQL, payments, external AI, or production secrets are used.</p>
+              <div className="grid gap-1 text-[10px] font-mono text-stone-700">
+                <span>demo@sayphora.demo</span>
+                <span>SayphoraDemo2026!</span>
+              </div>
+              <button type="button" onClick={useDemoAccess} className="w-full py-2.5 rounded-lg bg-stone-950 text-white text-[11px] font-semibold hover:bg-stone-800">
+                Fill demo sign-in
+              </button>
+            </div>
+          )}
           {authMode === 'forgot' && <p className="text-xs text-stone-600">Enter the email for your account and we will send you a link to choose a new password.</p>}
           {authMode === 'reset' && <p className="text-xs text-stone-600">Choose a new password for your account.</p>}
 

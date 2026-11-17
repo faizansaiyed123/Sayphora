@@ -1,3 +1,9 @@
+import { demoRequest, DemoApiError } from '../demo/demoApi';
+
+export const DEMO_MODE =
+  import.meta.env.VITE_DEMO_MODE === undefined ||
+  import.meta.env.VITE_DEMO_MODE !== 'false';
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -6,6 +12,7 @@ export class ApiError extends Error {
     public fields?: Record<string, string>
   ) {
     super(message);
+    this.name = 'ApiError';
   }
 }
 
@@ -16,14 +23,27 @@ interface RequestOptions {
   signal?: AbortSignal;
 }
 
-/** Same-origin JSON client. Cookies carry the session; errors are normalised into ApiError. */
 export async function api<T = any>(path: string, opts: RequestOptions = {}): Promise<T> {
+  if (DEMO_MODE) {
+    try {
+      return await demoRequest<T>(path, opts);
+    } catch (err) {
+      if (err instanceof DemoApiError) {
+        throw new ApiError(err.status, err.message, err.code, err.fields);
+      }
+      throw err;
+    }
+  }
+
   let res: Response;
   try {
-    res = await fetch(`/api${path}`, {
+    res = await fetch('/api' + path, {
       method: opts.method ?? (opts.body !== undefined ? 'POST' : 'GET'),
       credentials: 'same-origin',
-      headers: { ...(opts.body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...opts.headers },
+      headers: {
+        ...(opts.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        ...(opts.headers ?? {})
+      },
       body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
       signal: opts.signal
     });
@@ -39,7 +59,12 @@ export async function api<T = any>(path: string, opts: RequestOptions = {}): Pro
   }
   if (!res.ok) {
     const e = data?.error;
-    throw new ApiError(res.status, e?.message || `Request failed (${res.status}).`, e?.code, e?.details && typeof e.details === 'object' && !Array.isArray(e.details) ? e.details : undefined);
+    throw new ApiError(
+      res.status,
+      e?.message || \`Request failed (\${res.status}).\`,
+      e?.code,
+      e?.details && typeof e.details === 'object' && !Array.isArray(e.details) ? e.details : undefined
+    );
   }
   return data as T;
 }
